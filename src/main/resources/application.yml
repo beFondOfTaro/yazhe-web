@@ -1,0 +1,35 @@
+server:
+  context-path: /
+
+websocket:
+  port: 8888
+
+spring:
+  profiles:
+    active: hyz
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      druid:
+        initial-size: 5
+        max-active: 20
+        min-idle: 5
+        #监控视图配置
+        stat-view-servlet:
+          login-username: admin
+          login-password: 123456
+
+mybatis:
+   mapperLocations: classpath:/mapper/*/*.xml
+   type-aliases-package: com.sicau.devicemanager.POJO.DO,com.sicau.devicemanager.POJO.DTO,com.sicau.devicemanager.POJO.VO
+   configuration:
+     map-underscore-to-camel-case: true
+
+#token过期时间（天）
+token-expire-time: 30
+
+logging:
+  level:
+    com:
+      sicau:
+        devicemanager:
+          dao: debug
