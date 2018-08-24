@@ -10,6 +10,8 @@
 		<module>../yazhe-web-service-util</module>
 		<module>../yazhe-web-service-domain</module>
 		<module>../yazhe-web-service-user-auth</module>
+		<module>../yazhe-web-service-eureka</module>
+		<module>../yazhe-web-service-config-server</module>
 	</modules>
 	<packaging>pom</packaging>
 

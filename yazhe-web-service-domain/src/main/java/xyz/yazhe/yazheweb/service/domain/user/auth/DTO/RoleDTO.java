@@ -1,7 +1,7 @@
 package xyz.yazhe.yazheweb.service.domain.user.auth.DTO;
 
 import lombok.Data;
-import xyz.yazhe.yazheweb.module.user.auth.POJO.DO.Permission;
+import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
 
 import java.util.Date;
 import java.util.List;

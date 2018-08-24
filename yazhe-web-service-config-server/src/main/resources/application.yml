@@ -1,0 +1,21 @@
+server:
+  port: 6101
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/beFondOfTaro/yazhe-web
+          search-paths: config
+          default-label: master
+          username:
+          password:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6100/eureka
+  instance:
+    prefer-ip-address: true
+
