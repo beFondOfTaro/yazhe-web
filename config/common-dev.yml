@@ -1,0 +1,7 @@
+spring:
+  datasource:
+      druid:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://39.108.97.103:3306/yazhe_web?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
+        username: root
+        password: 123456
