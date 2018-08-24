@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,10 +25,10 @@ import java.util.Map;
  * Created at 17:08 2018/8/14
  */
 @Aspect
-public class LogAspect {
+public class BaseLogAspect {
 
 	private Gson gson = GsonUtil.getGson();
-	private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+	private static final Logger logger = LoggerFactory.getLogger(BaseLogAspect.class);
 
 	//定义切点
 	@Pointcut("execution(public * xyz.yazhe.yazheweb.service..*.controller.*.*(..))")

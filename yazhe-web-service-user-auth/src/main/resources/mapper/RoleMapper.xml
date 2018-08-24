@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xyz.yazhe.yazheweb.module.user.auth.dao.RoleMapper">
+<mapper namespace="xyz.yazhe.yazheweb.service.user.auth.dao.RoleMapper">
 
-    <resultMap id="RoleDTO" type="xyz.yazhe.yazheweb.module.user.auth.POJO.DTO.RoleDTO">
+    <resultMap id="RoleDTO" type="xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleDTO">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="locked" column="locked"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <collection property="permissionList" ofType="xyz.yazhe.yazheweb.module.user.auth.POJO.DO.Permission">
+        <collection property="permissionList" ofType="xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission">
             <id property="id" column="p_id"/>
             <result property="resource" column="resource"/>
             <result property="resourceName" column="resource_name"/>

@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: http://localhost:6101
+      label: master
+      name: yazhe
+      profile: common-${spring.profiles.active},service-user-auth-${spring.profiles.active}

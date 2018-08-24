@@ -6,7 +6,7 @@
 		<artifactId>yazhe-web-parent</artifactId>
 		<groupId>xyz.yazhe</groupId>
 		<version>0.0.1</version>
-		<relativePath>../yazhe-web-parent/pom.xml</relativePath>
+		<relativePath>../yazhe-web-service-parent/pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 

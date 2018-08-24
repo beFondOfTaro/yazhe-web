@@ -1,0 +1,10 @@
+server:
+  port: 6110
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  application:
+    name: service-zuul
+zuul:
+  host:
+    connect-timeout-millis: 1000

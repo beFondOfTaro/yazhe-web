@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="xyz.yazhe.yazheweb.module.user.auth.dao.UserAuthMapper">
+<mapper namespace="xyz.yazhe.yazheweb.service.user.auth.dao.UserAuthMapper">
 
-    <select id="getUserAuthByLoginInfo" resultType="xyz.yazhe.yazheweb.module.user.auth.POJO.DO.UserAuth">
-        SELECT *
-        FROM user_auth
-        WHERE identifier = #{identifier}
-          and credential = #{credential}
-          and identify_type = #{identifyType}
-    </select>
+	<select id="getUserAuthByLoginInfo" resultType="xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth">
+		SELECT *
+		FROM user_auth
+		WHERE identifier = #{identifier}
+			  AND credential = #{credential}
+			  AND identify_type = #{identifyType}
+			  AND locked = 0
+	</select>
 
-    <select id="getPasswordByUserId" resultType="java.lang.String">
-        SELECT user_auth.credential
-        FROM user_auth
-        WHERE user_id = #{userId}
-        AND locked = 0
-        And identify_type = 0
-    </select>
+	<select id="getPasswordByUserId" resultType="java.lang.String">
+		SELECT user_auth.credential
+		FROM user_auth
+		WHERE user_id = #{userId}
+			  AND locked = 0
+			  AND identify_type = 0
+	</select>
 </mapper>

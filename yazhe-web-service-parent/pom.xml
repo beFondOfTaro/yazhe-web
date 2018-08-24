@@ -5,13 +5,14 @@
 
 	<groupId>xyz.yazhe</groupId>
 	<artifactId>yazhe-web-parent</artifactId>
-	<version>0.0.1</version>
+	<version>${yazhe-web.version}</version>
 	<modules>
 		<module>../yazhe-web-service-util</module>
 		<module>../yazhe-web-service-domain</module>
 		<module>../yazhe-web-service-user-auth</module>
 		<module>../yazhe-web-service-eureka</module>
 		<module>../yazhe-web-service-config-server</module>
+		<module>../yazhe-web-service-zuul</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -30,6 +31,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Dalston.SR4</spring-cloud.version>
+		<yazhe-web.version>0.0.1</yazhe-web.version>
 	</properties>
 
 	<dependencyManagement>
@@ -46,10 +48,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

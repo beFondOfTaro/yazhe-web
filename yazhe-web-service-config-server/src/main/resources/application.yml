@@ -2,7 +2,7 @@ server:
   port: 6101
 spring:
   application:
-    name: config-server
+    name: service-config-server
   cloud:
     config:
       server:

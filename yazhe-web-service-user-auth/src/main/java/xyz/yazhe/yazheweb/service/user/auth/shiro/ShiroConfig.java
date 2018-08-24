@@ -47,23 +47,23 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
         factoryBean.setSecurityManager(securityManager);
-        // 添加自己的过滤器并且取名
-        Map<String, Filter> filterMap = factoryBean.getFilters();
-        //身份认证拦截器
-        filterMap.put("statelessAuthc", new AuthFilter());
-
-        factoryBean.setUnauthorizedUrl("/401");
-
-        /*
-         * 自定义url规则
-         * http://shiro.apache.org/web.html#urls-
-         */
-        Map<String, String> filterRuleMap = new LinkedHashMap<>();
-        //登录不需要拦截
-        filterRuleMap.put(CommonConstants.API_PREFIX + "/login", "anon");
-        // 所有rest请求通过我们自己的auth Filter
-        filterRuleMap.put(CommonConstants.API_PREFIX + "/**", "statelessAuthc");
-        factoryBean.setFilterChainDefinitionMap(filterRuleMap);
+//        // 添加自己的过滤器并且取名
+//        Map<String, Filter> filterMap = factoryBean.getFilters();
+//        //身份认证拦截器
+//        filterMap.put("statelessAuthc", new AuthFilter());
+//
+//        factoryBean.setUnauthorizedUrl("/401");
+//
+//        /*
+//         * 自定义url规则
+//         * http://shiro.apache.org/web.html#urls-
+//         */
+//        Map<String, String> filterRuleMap = new LinkedHashMap<>();
+//        //登录不需要拦截
+//        filterRuleMap.put(CommonConstants.API_PREFIX + "/login", "anon");
+//        // 所有rest请求通过我们自己的auth Filter
+//        filterRuleMap.put(CommonConstants.API_PREFIX + "/**", "statelessAuthc");
+//        factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }
 
