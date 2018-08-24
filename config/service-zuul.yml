@@ -1,0 +1,5 @@
+zuul:
+  routes:
+    service-user-auth:
+      path: /user-auth/**
+      service-id: service-user-auth
