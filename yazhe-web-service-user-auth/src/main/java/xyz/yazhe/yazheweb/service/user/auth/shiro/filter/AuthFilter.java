@@ -5,7 +5,6 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 import org.springframework.beans.factory.annotation.Value;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResultEnum;
-import xyz.yazhe.yazheweb.service.user.auth.shiro.token.SimpleToken;
 import xyz.yazhe.yazheweb.service.util.DateUtil;
 import xyz.yazhe.yazheweb.service.util.web.CookieUtil;
 import xyz.yazhe.yazheweb.service.util.web.ResponseUtil;

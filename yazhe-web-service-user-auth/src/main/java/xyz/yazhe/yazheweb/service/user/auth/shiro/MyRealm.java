@@ -17,7 +17,6 @@ import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Role;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
 import xyz.yazhe.yazheweb.service.user.auth.service.UserService;
-import xyz.yazhe.yazheweb.service.user.auth.shiro.token.SimpleToken;
 
 
 @Slf4j
