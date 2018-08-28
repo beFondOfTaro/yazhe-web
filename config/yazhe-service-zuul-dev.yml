@@ -7,4 +7,4 @@ zuul:
 filter:
   web-auth:
     # 不进行过滤的url
-   ignored-url: www.yazhe.xyz
+   ignored-url: /user-auth/login
