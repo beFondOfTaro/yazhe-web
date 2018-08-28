@@ -24,6 +24,8 @@ public interface CommonConstants {
 		/**
 		 * 用户登录认证token前缀
 		 */
-		String AUTH_TOKEN_PRIFIX = BUSINESS_PREFIX + "token:";
+		String AUTH_TOKEN_PREFIX = BUSINESS_PREFIX + "token:";
+
+		String USER_PERMISSION_PREFIX = BUSINESS_PREFIX + "user_per:";
 	}
 }

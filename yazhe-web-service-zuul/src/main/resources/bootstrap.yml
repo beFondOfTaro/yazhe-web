@@ -1,11 +1,15 @@
 spring:
+  profiles:
+    active: dev
   cloud:
     config:
       label: master
-      profile: dev
+      name: yazhe
+      profile: service-zuul-${spring.profiles.active},redis-${spring.profiles.active}
       discovery:
-        enabled: true
-        service-id: service-config-server
+              enabled: true
+              service-id: service-config-server
+
 eureka:
   client:
     service-url:

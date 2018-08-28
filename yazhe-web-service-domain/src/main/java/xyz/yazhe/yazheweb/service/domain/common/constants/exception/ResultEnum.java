@@ -1,4 +1,4 @@
-package xyz.yazhe.yazheweb.service.domain.common.constants;
+package xyz.yazhe.yazheweb.service.domain.common.constants.exception;
 
 import lombok.Getter;
 

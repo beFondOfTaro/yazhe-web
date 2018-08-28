@@ -1,0 +1,10 @@
+zuul:
+  routes:
+    service-user-auth:
+      path: /user-auth/**
+      service-id: service-user-auth
+
+filter:
+  web-auth:
+    # 不进行过滤的url
+   ignored-mappings: /user-auth/login[post]

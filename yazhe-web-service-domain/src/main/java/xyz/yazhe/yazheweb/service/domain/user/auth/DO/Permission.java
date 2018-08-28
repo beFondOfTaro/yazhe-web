@@ -35,6 +35,11 @@ public class Permission {
      */
     private String permissionName;
 
+	/**
+	 * 对应的url
+	 */
+	private String url;
+
     /**
      * 是否本菜单必选权限,通常是"列表"权限是必选
      */

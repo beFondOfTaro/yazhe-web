@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserAuthMapper;
@@ -43,11 +43,9 @@ public class LoginServiceImpl implements LoginService {
             throw new CommonException(ResultEnum.LOGIN_FAILED);
         }
         //根据userId，密码，token过期时间生成token
-		String token = JWTUtil.sign(userAuth.getUserId(),
-				userAuthMapper.getPasswordByUserId(userAuth.getUserId()),
-				DateUtil.convertDay2Millisecond(tokenExpireTime));
+		String token = JWTUtil.sign(userAuth.getUserId(), credential, DateUtil.convertDay2Millisecond(tokenExpireTime));
         //存入redis
-        redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PRIFIX + userAuth.getUserId()).
+        redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userAuth.getUserId()).
 				set(token,tokenExpireTime, TimeUnit.DAYS);
         //返回给客户端
         Map<String,Object> res = new HashMap<>();

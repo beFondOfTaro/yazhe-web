@@ -3,7 +3,14 @@ spring:
     active: dev
   cloud:
     config:
-      uri: http://localhost:6101
       label: master
       name: yazhe
-      profile: common-${spring.profiles.active},service-user-auth-${spring.profiles.active}
+      profile: common-${spring.profiles.active},service-user-auth-${spring.profiles.active},redis-${spring.profiles.active}
+      discovery:
+        enabled: true
+        service-id: service-config-server
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:6100/eureka

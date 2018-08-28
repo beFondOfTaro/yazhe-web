@@ -1,7 +1,7 @@
 package xyz.yazhe.yazheweb.service.domain.exception;
 
 import lombok.Getter;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 
 /**
  * 通用异常

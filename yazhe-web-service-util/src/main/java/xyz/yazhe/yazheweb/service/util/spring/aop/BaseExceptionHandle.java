@@ -1,12 +1,11 @@
 package xyz.yazhe.yazheweb.service.util.spring.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceExceptionEnum;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResourceExceptionEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
 import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;

@@ -2,7 +2,7 @@ package xyz.yazhe.yazheweb.service.util.web.result;
 
 
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 
 /**
  * http响应的工具类

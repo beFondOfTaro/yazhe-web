@@ -10,12 +10,6 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
-import xyz.yazhe.yazheweb.service.user.auth.shiro.filter.AuthFilter;
-
-import javax.servlet.Filter;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * shiro配置
@@ -25,10 +19,10 @@ import java.util.Map;
 public class ShiroConfig {
 
     @Bean("securityManager")
-    public DefaultWebSecurityManager getManager(MyRealm realm) {
+    public DefaultWebSecurityManager getManager(WebAuthRealm webAuthRealm) {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
         // 使用自己的realm
-        manager.setRealm(realm);
+        manager.setRealm(webAuthRealm);
 
         /*
          * 关闭shiro自带的session，详情见文档
@@ -66,6 +60,11 @@ public class ShiroConfig {
 //        factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }
+
+    @Bean
+	public WebAuthRealm webAuthRealm(){
+    	return new WebAuthRealm();
+	}
 
     /**
      * 下面的代码是添加注解支持

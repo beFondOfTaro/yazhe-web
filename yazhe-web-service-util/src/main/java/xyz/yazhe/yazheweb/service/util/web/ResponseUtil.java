@@ -1,6 +1,7 @@
 package xyz.yazhe.yazheweb.service.util.web;
 
 import com.google.gson.Gson;
+import xyz.yazhe.yazheweb.service.util.GsonUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.io.IOException;
  */
 public class ResponseUtil {
 
+	private static Gson gson = GsonUtil.getGson();
+
     /**
      * 返回json格式数据
      * @param httpServletResponse
@@ -19,7 +22,6 @@ public class ResponseUtil {
      * @throws IOException
      */
     public static void toJson(HttpServletResponse httpServletResponse, Object data) throws IOException{
-        Gson gson = new Gson();
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json; charset=utf-8");
         httpServletResponse.getWriter().write(
