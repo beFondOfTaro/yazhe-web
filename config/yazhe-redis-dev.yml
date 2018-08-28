@@ -1,3 +1,4 @@
 spring:
   redis:
-      url: localhost:8888
+      hostname: 39.108.97.103
+      port: 8888
