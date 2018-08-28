@@ -1,4 +1,4 @@
 spring:
   redis:
       hostname: 39.108.97.103
-      port: 8888
+      port: 6379
