@@ -1,7 +1,7 @@
 package xyz.yazhe.yazheweb.service.domain.exception;
 
 import lombok.Getter;
-import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceExceptionEnum;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResourceExceptionEnum;
 
 /**
  * 资源异常

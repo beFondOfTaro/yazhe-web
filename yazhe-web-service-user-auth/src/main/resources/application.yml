@@ -4,12 +4,3 @@ server:
 spring:
   application:
       name: service-user-auth
-  redis:
-    url: localhost:8888
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:6100/eureka
-mybatis:
-  mapper-locations: classpath:mapper/*.xml

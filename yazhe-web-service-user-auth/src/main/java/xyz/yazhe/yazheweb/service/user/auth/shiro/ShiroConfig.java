@@ -10,12 +10,6 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
-import xyz.yazhe.yazheweb.service.user.auth.shiro.filter.AuthFilter;
-
-import javax.servlet.Filter;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * shiro配置
