@@ -13,6 +13,11 @@ public interface CommonConstants {
     String API_PREFIX = "/api_v1";
 
 	/**
+	 * redis缓存的默认过期时间
+	 */
+	long REDIS_KEY_DEFAULT_EXPIRE_TIME = 30*24*60*60;
+
+	/**
 	 * redis缓存时的键
 	 */
 	interface RedisKey{

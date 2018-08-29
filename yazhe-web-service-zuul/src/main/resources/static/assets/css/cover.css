@@ -60,9 +60,18 @@ body {
   padding: 30px;
 }
 
-/* 导航条 */
-.navbar-fixed-top {
+/* 登录框 */
+#login-modal {
+    text-shadow: none;
+    color: #0f0f0f;
+}
 
+#close-login {
+    border: 1px solid rgb(204, 204, 204);
+}
+
+#login-modal .modal-body{
+    text-align: justify;
 }
 
 /*

@@ -1,16 +1,16 @@
 package xyz.yazhe.yazheweb.service.zuul.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.BoundListOperations;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -26,9 +26,8 @@ import xyz.yazhe.yazheweb.service.zuul.feign.UserFeign;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 身份认证过滤器
@@ -46,9 +45,7 @@ public class WebAuthFilter extends ZuulFilter{
 	@Value("${filter.web-auth.ignored-mappings}")
 	private String ignoredMappings;
 	@Autowired
-	private RedisTemplate<String,Object> redisTemplate;
-	@Autowired
-	private RedisTemplate<String,String> stringRedisTemplate;
+	private RedisTemplate<String,String> redisTemplate;
 	@Autowired
 	private UserFeign userFeign;
 	private Gson gson = GsonUtil.getGson();
@@ -91,12 +88,13 @@ public class WebAuthFilter extends ZuulFilter{
 				throw new CommonException(ResultEnum.INVALID_TOKEN);
 			}
 			userId = JWTUtil.getUserId(token);
-			if (userId == null || !token.equals(stringRedisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId).get())){
+			if (userId == null || !token.equals(redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId).get())){
 				//返回错误
 				throw new CommonException(ResultEnum.TOKEN_EXPIRED);
 			}
 		}
 		catch (CommonException e){
+			logger.error(e.getMessage());
 			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(e.getCode(),e.getMessage())));
 			requestContext.setResponseStatusCode(401);
 			requestContext.setSendZuulResponse(false);
@@ -136,8 +134,9 @@ public class WebAuthFilter extends ZuulFilter{
 		String userTokenKey = CommonConstants.RedisKey.USER_PERMISSION_PREFIX + userId;
 		//先查询缓存
 		if (redisTemplate.hasKey(userTokenKey)){
-			BoundListOperations<String,Object> boundListOperations = redisTemplate.boundListOps(userTokenKey);
-			List<Object> permissionList = boundListOperations.range(0,boundListOperations.size());
+			BoundValueOperations<String,String> boundListOperations = redisTemplate.boundValueOps(userTokenKey);
+			boundListOperations.expire(CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME,TimeUnit.SECONDS);
+			List<Permission> permissionList = gson.fromJson(boundListOperations.get(),new TypeToken<List<Permission>>(){}.getType());
 			for (Object permission : permissionList) {
 				if (((Permission)permission).getUrl().contains(requestUrl)){
 					return true;
@@ -147,7 +146,7 @@ public class WebAuthFilter extends ZuulFilter{
 			//缓存没有那么查询数据库
 			JsonArray permissionList = gson.toJsonTree(userFeign.listPermission().getData()).getAsJsonArray();
 			//缓存到redis
-			redisTemplate.boundListOps(userTokenKey).rightPushAll(permissionList);
+			redisTemplate.boundValueOps(userTokenKey).set(permissionList.toString(),CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
 			for (JsonElement jsonElement : permissionList) {
 				if (jsonElement.getAsJsonObject().get("url").getAsString().contains(requestUrl)) {
 					return true;
