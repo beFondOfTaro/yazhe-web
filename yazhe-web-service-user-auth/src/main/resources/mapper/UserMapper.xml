@@ -80,9 +80,14 @@
                 #{identifier},
                 #{credential});
     </insert>
+	<update id="updateLastTimeByUserId">
+		UPDATE `user`
+		SET last_time = #{lastTime}
+		where id = #{userId}
+	</update>
 
 
-    <delete id="deleteUserById">
+	<delete id="deleteUserById">
         DELETE FROM `user`
         WHERE id = #{userId}
     </delete>

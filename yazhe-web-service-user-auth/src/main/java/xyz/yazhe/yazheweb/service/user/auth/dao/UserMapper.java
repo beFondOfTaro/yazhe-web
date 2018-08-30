@@ -5,6 +5,7 @@ import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,5 +55,7 @@ public interface UserMapper {
      * @return
      */
     int deleteUserAuthByUserId(@Param("userId") String userId);
+
+    int updateLastTimeByUserId(@Param("lastTime") Date lastTime, @Param("userId") String userId);
 
 }
