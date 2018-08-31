@@ -10,6 +10,8 @@ import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
 import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Controller的统一异常处理
  * @author BeFondOfTaro
@@ -20,7 +22,7 @@ public class BaseExceptionHandle {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResultVO handle(Exception e){
+    public ResultVO handle(Exception e, HttpServletResponse response){
         //如果是我们自定义的异常
         if (e instanceof CommonException){
             CommonException commonException = (CommonException) e;
@@ -36,6 +38,7 @@ public class BaseExceptionHandle {
         //如果不是我们自定义的异常
         else {
             log.error("【系统异常】{}",e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return ResultVOUtil.error(
                     ResultEnum.UNKNOWN_ERROR.getCode(),
                     e.getMessage());

@@ -43,6 +43,6 @@ public class WebAuthRealm extends AuthorizingRealm {
 			throw new AuthenticationException("登录失败，未查询到用户身份信息！");
 		}
 
-		return new SimpleAuthenticationInfo(username,userAuth.getCredential(),getName());
+		return new SimpleAuthenticationInfo(userAuth.getUserId(),userAuth.getCredential(),getName());
 	}
 }

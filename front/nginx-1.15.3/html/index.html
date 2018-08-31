@@ -55,8 +55,20 @@
                                 </ul>
                             </li>
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="active"><a href="javascript:void (0);" data-toggle="modal" data-target="#login-modal">登录<span class="sr-only">(current)</span></a></li>
+                        <ul class="nav navbar-nav navbar-right" id="nav-user">
+                            <li v-if="isLogin">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <img src="favicon.ico"><span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">登录用户：<strong style="display: block">{{userInfo.username}}</strong></a>
+                                    <a v-for="role in userInfo.roleList" href="#">角色：<strong style="display: block">{{role.name}}</strong></a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li class="dropdown-header">Nav header</li>
+                                </ul>
+                            </li>
+                            <li v-if="!isLogin" class="active"><a href="javascript:void (0);" data-toggle="modal" data-target="#login-modal">登录<span class="sr-only">(current)</span></a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -70,9 +82,9 @@
                 </p>
             </div>
 
-            <div class="mastfoot">
+            <div id="footer" class="mastfoot">
                 <div class="inner">
-                    <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+                    <p>total clicks: {{clicks}}</p>
                 </div>
             </div>
 
@@ -94,17 +106,17 @@
                <form>
                    <div class="form-group">
                        <label for="login-username">用户名</label>
-                       <input type="text" class="form-control" id="login-username" placeholder="用户名">
+                       <input v-model="identifier" type="text" class="form-control" id="login-username" placeholder="用户名">
                    </div>
                    <div class="form-group">
                        <label for="login-password">密码</label>
-                       <input type="password" class="form-control" id="login-password" placeholder="密码">
+                       <input v-model="credential" type="password" class="form-control" id="login-password" placeholder="密码">
                    </div>
                </form>
             </div>
             <div class="modal-footer">
                 <button id="close-login" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="login();">登录</button>
+                <button v-on:click="login" type="button" class="btn btn-primary">登录</button>
             </div>
         </div>
     </div>
@@ -113,31 +125,75 @@
 <script src="./assets/js/jquery-3.3.1.js"></script>
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 <script src="./assets/bootstrap/js/bootstrap.js"></script>
+<script src="./assets/js/vue.js"></script>
 <script src="./assets/js/jquery.cookie.js"></script>
 <script>
     var hostname = "/api/";
+    var loginUrl = hostname + "user-auth/login";
+    var clicksIncUrl = hostname + "user-auth/clicks-inc";
+    var userInfoKey = "u_info";
+    var tokenKey = "token";
 
-    function login() {
-        var loginUsername = $("#login-username").val();
-        var loginPassword = $("#login-password").val();
-        $.ajax({
-            url: hostname + "user-auth/login",
-            type: "post",
-            data: {
-                identifier: loginUsername,
-                credential: loginPassword
-            },
-            success: function (data) {
-              if (data.code == 0){
-                  $.cookie("token",data.data.token);
-                  $.cookie("userInfo",JSON.stringify(data.data.userInfo));
-                  alert("登录成功");
-                  $("#login-modal").modal("hide");
-
-              }
+    var vmFooter = new Vue({
+        el: "#footer",
+        data: {
+            clicks: 0
+        },
+        methods: {
+            clicksInc: function () {
+                $.ajax({
+                    url: clicksIncUrl,
+                    method: "post",
+                    success: function (data) {
+                        vmFooter.clicks = data.data
+                    }
+                })
             }
-        })
-    }
+        },
+        created: function () {
+            this.clicksInc();
+        }
+    });
+
+    var vmUser = new Vue({
+        el: "#nav-user",
+        data: {
+            isLogin: $.cookie(userInfoKey)!=undefined,
+            userInfo: JSON.parse($.cookie(userInfoKey))
+        }
+    });
+
+    var vmLogin = new Vue({
+        el: "#login-modal",
+        data: {
+            identifier: "",
+            credential: ""
+        },
+        methods: {
+            login: function () {
+                var loginUsername = this.identifier;
+                var loginPassword = this.credential;
+                $.ajax({
+                    url: loginUrl,
+                    type: "post",
+                    data: {
+                        identifier: loginUsername,
+                        credential: loginPassword
+                    },
+                    success: function (data) {
+                        if (data.code == 0){
+                            $.cookie(tokenKey,data.data.token);
+                            $.cookie(userInfoKey,JSON.stringify(data.data.userInfo));
+                            alert("登录成功");
+                            $("#login-modal").modal("hide");
+                            vmUser.isLogin = true;
+                        }
+                    }
+                })
+            }
+        }
+    });
+
 </script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package xyz.yazhe.yazheweb.service.user.auth.service.impl;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +16,7 @@ import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserAuthMapper;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserMapper;
 import xyz.yazhe.yazheweb.service.user.auth.service.LoginService;
+import xyz.yazhe.yazheweb.service.user.auth.shiro.token.CustomToken;
 import xyz.yazhe.yazheweb.service.util.DateUtil;
 import xyz.yazhe.yazheweb.service.util.JWTUtil;
 
@@ -36,19 +39,15 @@ public class LoginServiceImpl implements LoginService {
     private int tokenExpireTime;
 
     @Autowired
-    private UserAuthMapper userAuthMapper;
-    @Autowired
 	private RedisTemplate<String,String> redisTemplate;
     @Autowired
 	private UserMapper userMapper;
 
     @Override
     public Map<String, Object> login(String identifier, String credential, Integer identifyType) {
-        UserAuth userAuth = userAuthMapper.getUserAuthByLoginInfo(identifier, credential, identifyType);
-        if (null == userAuth){
-            throw new CommonException(ResultEnum.LOGIN_FAILED);
-        }
-        String userId = userAuth.getUserId();
+		Subject subject = SecurityUtils.getSubject();
+		subject.login(new CustomToken(identifier,credential,System.currentTimeMillis(),identifyType));
+		String userId = (String) subject.getPrincipals().getPrimaryPrincipal();
         //根据userId，密码，token过期时间生成token
 		String token = JWTUtil.sign(userId, credential, DateUtil.convertDay2Millisecond(tokenExpireTime));
         //存入redis

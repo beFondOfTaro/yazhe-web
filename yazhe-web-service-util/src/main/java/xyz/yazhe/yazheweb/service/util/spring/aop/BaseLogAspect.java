@@ -35,6 +35,19 @@ public class BaseLogAspect {
 	public void pointCut(){
 
 	}
+	//定义切点
+	@Pointcut("execution(public * xyz.yazhe.yazheweb.service..*.service.impl.*.*(..))")
+	public void serviceCut(){
+
+	}
+
+	@Around("serviceCut()")
+	public Object test(ProceedingJoinPoint pjp) throws Throwable{
+		long startTime = System.currentTimeMillis();
+		Object o = pjp.proceed();
+		logger.info(String.valueOf(System.currentTimeMillis() - startTime));
+		return o;
+	}
 
 	@Around("pointCut()")
 	public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
