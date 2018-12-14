@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xyz.yazhe.yazheweb.service.blog.dao.ArticleMapper" >
+  <resultMap id="BaseResultMap" type="xyz.yazhe.yazheweb.service.domain.blog.DO.Article" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="reading_amount" property="readingAmount" jdbcType="BIGINT" />
+    <result column="praise_clicks" property="praiseClicks" jdbcType="BIGINT" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+    <result column="original" property="original" jdbcType="BIT" />
+    <result column="original_author_id" property="originalAuthorId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+	<resultMap id="ArticleVOMap" type="xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+		<result column="created_username" property="createdUsername" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="reading_amount" property="readingAmount" jdbcType="BIGINT" />
+		<result column="praise_clicks" property="praiseClicks" jdbcType="BIGINT" />
+		<result column="original" property="original" jdbcType="BIT" />
+		<result column="original_author_id" property="originalAuthorId" jdbcType="VARCHAR" />
+		<result column="original_author_username" property="originalAuthorUsername" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+  <sql id="Base_Column_List" >
+    id, created_user_id, title, content, reading_amount, praise_clicks, deleted, original, 
+    orignal_author_id, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+	<select id="getArticleVOById" resultType="xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO">
+		select a.id, a.created_user_id, u.username created_username, a.title, a.content, a.reading_amount,
+			   a.praise_clicks, a.original, a.original_author_id, u2.username original_author_username, a.create_time,
+			   a.update_time
+		from t_article a
+		join user u
+		on u.id = a.created_user_id
+		join user u2
+		on u2.id = original_author_id
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+	<delete id="logicalDelete">
+		update t_article
+		set `deleted` = 1
+	</delete>
+	<insert id="insert" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.Article" >
+    insert into t_article (id, created_user_id, title, 
+      content, reading_amount, praise_clicks, 
+      deleted, original, original_author_id,
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{createdUserId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{readingAmount,jdbcType=BIGINT}, #{praiseClicks,jdbcType=BIGINT}, 
+      #{deleted,jdbcType=BIT}, #{original,jdbcType=BIT}, #{originalAuthorId,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.Article" >
+    insert into t_article
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="readingAmount != null" >
+        reading_amount,
+      </if>
+      <if test="praiseClicks != null" >
+        praise_clicks,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="original != null" >
+        original,
+      </if>
+      <if test="originalAuthorId != null" >
+        orignal_author_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="readingAmount != null" >
+        #{readingAmount,jdbcType=BIGINT},
+      </if>
+      <if test="praiseClicks != null" >
+        #{praiseClicks,jdbcType=BIGINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=BIT},
+      </if>
+      <if test="original != null" >
+        #{original,jdbcType=BIT},
+      </if>
+      <if test="originalAuthorId != null" >
+        #{originalAuthorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.Article" >
+    update t_article
+    <set >
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="readingAmount != null" >
+        reading_amount = #{readingAmount,jdbcType=BIGINT},
+      </if>
+      <if test="praiseClicks != null" >
+        praise_clicks = #{praiseClicks,jdbcType=BIGINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=BIT},
+      </if>
+      <if test="original != null" >
+        original = #{original,jdbcType=BIT},
+      </if>
+      <if test="originalAuthorId != null" >
+        orignal_author_id = #{originalAuthorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.Article" >
+    update t_article
+    set created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      reading_amount = #{readingAmount,jdbcType=BIGINT},
+      praise_clicks = #{praiseClicks,jdbcType=BIGINT},
+      deleted = #{deleted,jdbcType=BIT},
+      original = #{original,jdbcType=BIT},
+      original_author_id = #{originalAuthorId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

@@ -61,35 +61,61 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(UserRegisterDTO userRegisterDTO) {
-        //用户信息写入
-        User user = new User();
-        BeanUtils.copyProperties(userRegisterDTO,user);
-        String userId = KeyUtil.genUniqueKey();
-        user.setId(userId);
-        if (1 != userMapper.insertUser(user)){
-            throw new CommonException(ResultEnum.UNKNOWN_ERROR);
-        }
-        //用户身份认证信息写入
-        UserAuth userAuth = new UserAuth();
-        userAuth.setId(KeyUtil.genUniqueKey());
-        userAuth.setUserId(userId);
-        userAuth.setIdentifyType(0);
-        userAuth.setIdentifier(userRegisterDTO.getUsername());
-        userAuth.setCredential(userRegisterDTO.getPassword());
-        if (1 != userMapper.insertUserAuth(userAuth)){
-            throw new CommonException(ResultEnum.UNKNOWN_ERROR);
-        }
-        //写入用户角色
-        UserRole userRole = new UserRole();
-        userRole.setId(KeyUtil.genUniqueKey());
-        userRole.setUserId(userId);
-        userRole.setRoleId(userRegisterDTO.getRoleId());
-        if (1 != userRoleMapper.insertUserRole(userRole)){
-            throw new CommonException(ResultEnum.UNKNOWN_ERROR);
-        }
-    }
+		String userId = insertUser(userRegisterDTO);
+		insertUserAuthTable(userRegisterDTO, userId);
+		insertUserRole(userRegisterDTO, userId);
+	}
 
-    @Override
+	/**
+	 * 写入用户角色
+	 * @param userRegisterDTO
+	 * @param userId 用户id
+	 */
+	private void insertUserRole(UserRegisterDTO userRegisterDTO, String userId) {
+		UserRole userRole = new UserRole();
+		userRole.setId(KeyUtil.genUniqueKey());
+		userRole.setUserId(userId);
+		userRole.setRoleId(userRegisterDTO.getRoleId());
+		if (1 != userRoleMapper.insertUserRole(userRole)){
+			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+		}
+	}
+
+	/**
+	 * 用户身份认证信息表写入
+	 * @param userRegisterDTO
+	 * @param userId
+	 */
+	private void insertUserAuthTable(UserRegisterDTO userRegisterDTO, String userId) {
+		UserAuth userAuth = new UserAuth();
+		userAuth.setId(KeyUtil.genUniqueKey());
+		userAuth.setUserId(userId);
+		userAuth.setIdentifyType(0);
+		userAuth.setIdentifier(userRegisterDTO.getUsername());
+		userAuth.setCredential(userRegisterDTO.getPassword());
+		if (1 != userMapper.insertUserAuth(userAuth)){
+			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+		}
+	}
+
+	/**
+	 * 用户信息表写入
+	 * @param userRegisterDTO
+	 * @return 用户id
+	 */
+	private String insertUser(UserRegisterDTO userRegisterDTO) {
+
+		User user = new User();
+		BeanUtils.copyProperties(userRegisterDTO,user);
+		String userId = KeyUtil.genUniqueKey();
+		user.setId(userId);
+		if (1 != userMapper.insertUser(user)){
+			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+		}
+		return userId;
+	}
+
+	@Override
     public void updateUserRole(String userId, List<String> roleIdList) {
         //删除原来的角色
         userRoleMapper.deleteUserRoleByUserId(userId);

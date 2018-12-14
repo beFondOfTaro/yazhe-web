@@ -5,7 +5,7 @@
 
 	<groupId>xyz.yazhe</groupId>
 	<artifactId>yazhe-web-parent</artifactId>
-	<version>${yazhe-web.version}</version>
+	<version>0.0.1</version>
 	<modules>
 		<module>../yazhe-web-service-util</module>
 		<module>../yazhe-web-service-domain</module>
@@ -13,6 +13,8 @@
 		<module>../yazhe-web-service-eureka</module>
 		<module>../yazhe-web-service-config-server</module>
 		<module>../yazhe-web-service-zuul</module>
+		<module>../yazhe-web-cloud-platform</module>
+		<module>../yazhe-web-blog</module>
 	</modules>
 	<packaging>pom</packaging>
 

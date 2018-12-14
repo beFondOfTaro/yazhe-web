@@ -1,0 +1,6 @@
+server:
+  port: 6135
+
+spring:
+  application:
+      name: service-blog
