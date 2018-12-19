@@ -7,4 +7,4 @@ spring:
     name: service-zuul
 zuul:
   host:
-    connect-timeout-millis: 5000
+    connect-timeout-millis: 10000

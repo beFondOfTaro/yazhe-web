@@ -38,6 +38,7 @@ public class BaseExceptionHandle {
         //如果不是我们自定义的异常
         else {
             log.error("【系统异常】{}",e);
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return ResultVOUtil.error(
                     ResultEnum.UNKNOWN_ERROR.getCode(),
