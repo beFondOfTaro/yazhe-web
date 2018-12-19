@@ -16,4 +16,4 @@ hystrix:
 filter:
   web-auth:
     # 不进行过滤的url
-   ignored-mappings: /service-user-auth/user-auth/login[post],/service-user-auth/user-auth/clicks-inc
+   ignored-mappings: /user-auth/login[post],/user-auth/clicks-inc
