@@ -3,6 +3,9 @@ zuul:
     service-user-auth:
       path: /user-auth/**
       service-id: service-user-auth
+    service-blog:
+      path: /blog/**
+      service-id: service-blog
 hystrix:
   command:
     default:
