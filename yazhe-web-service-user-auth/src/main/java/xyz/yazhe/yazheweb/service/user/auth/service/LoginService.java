@@ -18,4 +18,8 @@ public interface LoginService {
      */
     Map<String,Object> login(String identifier, String credential, Integer identifyType);
 
+	/**
+	 * 注销
+	 */
+	void logout();
 }

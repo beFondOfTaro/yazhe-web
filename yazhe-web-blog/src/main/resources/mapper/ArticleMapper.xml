@@ -48,6 +48,18 @@
 		on u.id = a.created_user_id
 		join user u2
 		on u2.id = original_author_id
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getArticleList" resultType="xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO">
+		select a.id, a.created_user_id, u.username created_username, a.title, a.content, a.reading_amount,
+			a.praise_clicks, a.original, a.original_author_id, u2.username original_author_username, a.create_time,
+			a.update_time
+		from t_article a
+		join user u
+			on u.id = a.created_user_id
+		join user u2
+			on u2.id = original_author_id
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

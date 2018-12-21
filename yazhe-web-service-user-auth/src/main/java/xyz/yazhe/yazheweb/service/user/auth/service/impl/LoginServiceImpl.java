@@ -19,6 +19,7 @@ import xyz.yazhe.yazheweb.service.user.auth.service.LoginService;
 import xyz.yazhe.yazheweb.service.user.auth.shiro.token.CustomToken;
 import xyz.yazhe.yazheweb.service.util.DateUtil;
 import xyz.yazhe.yazheweb.service.util.JWTUtil;
+import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -61,5 +62,11 @@ public class LoginServiceImpl implements LoginService {
         res.put("userInfo",userDTO);
         return res;
     }
+
+	@Override
+	public void logout() {
+    	//清除token
+		redisTemplate.delete(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + RequestUtil.getCurrentUserId());
+	}
 
 }

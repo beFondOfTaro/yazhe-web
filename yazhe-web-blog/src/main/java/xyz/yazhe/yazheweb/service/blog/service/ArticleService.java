@@ -1,5 +1,6 @@
 package xyz.yazhe.yazheweb.service.blog.service;
 
+import com.github.pagehelper.PageInfo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO;
 
@@ -34,4 +35,12 @@ public interface ArticleService {
 	 * @return
 	 */
 	ArticleVO getArticle(Integer articleId);
+
+	/**
+	 * 分页查询文章列表
+	 * @param articleRO
+	 * @return
+	 */
+	PageInfo<ArticleVO> getArticleList(ArticleRO articleRO);
+
 }

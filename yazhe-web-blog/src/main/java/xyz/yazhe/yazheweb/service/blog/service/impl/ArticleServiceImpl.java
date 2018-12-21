@@ -1,5 +1,7 @@
 package xyz.yazhe.yazheweb.service.blog.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +17,12 @@ import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
  * Created at 15:36 2018/12/14
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	private ArticleMapper articleMapper;
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void addArticle(ArticleRO articleRO) {
 		String currentUserId = RequestUtil.getCurrentUserId();
@@ -37,6 +39,7 @@ public class ArticleServiceImpl implements ArticleService {
 		articleMapper.logicalDelete(articleId);
 	}
 
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public void updateArticle(ArticleRO articleRO) {
 		Article article = new Article();
@@ -49,5 +52,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public ArticleVO getArticle(Integer articleId) {
 		return articleMapper.getArticleVOById(articleId);
+	}
+
+	@Override
+	public PageInfo<ArticleVO> getArticleList(ArticleRO articleRO) {
+		PageHelper.startPage(articleRO.getQueryPage().toPageHelperParam());
+		return new PageInfo<>(articleMapper.getArticleList(articleRO));
 	}
 }

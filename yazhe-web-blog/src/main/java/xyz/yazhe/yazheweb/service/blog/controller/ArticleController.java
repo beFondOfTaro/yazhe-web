@@ -58,4 +58,14 @@ public class ArticleController {
 	public ResultVO getArticle(@PathVariable Integer articleId){
 		return ResultVOUtil.success(articleService.getArticle(articleId));
 	}
+
+	/**
+	 * 分页查询文章列表
+	 * @param articleRO
+	 * @return
+	 */
+	@PostMapping("/get-article-list")
+	public ResultVO getArticleList(@RequestBody ArticleRO articleRO){
+		return ResultVOUtil.success(articleService.getArticleList(articleRO));
+	}
 }

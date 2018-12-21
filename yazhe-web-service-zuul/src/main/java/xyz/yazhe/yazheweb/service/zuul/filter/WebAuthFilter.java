@@ -138,7 +138,7 @@ public class WebAuthFilter extends ZuulFilter{
 			boundListOperations.expire(CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME,TimeUnit.SECONDS);
 			List<Permission> permissionList = gson.fromJson(boundListOperations.get(),new TypeToken<List<Permission>>(){}.getType());
 			for (Object permission : permissionList) {
-				if (((Permission)permission).getUrl().contains(requestUrl)){
+				if (matchUrl(((Permission)permission).getUrl(),requestUrl)) {
 					return true;
 				}
 			}
@@ -148,9 +148,34 @@ public class WebAuthFilter extends ZuulFilter{
 			//缓存到redis
 			redisTemplate.boundValueOps(userTokenKey).set(permissionList.toString(),CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
 			for (JsonElement jsonElement : permissionList) {
-				if (jsonElement.getAsJsonObject().get("url").getAsString().contains(requestUrl)) {
+				if (matchUrl(jsonElement.getAsJsonObject().get("url").getAsString(),requestUrl)) {
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 匹配url，支持sourceUrl结尾为path variable占位符的形式，如test/*可以匹配请求url为test/1
+	 * @param urlConfig 源url，即用户权限表中的url
+	 * @param requestUrl 请求的url
+	 * @return
+	 */
+	private boolean matchUrl(String urlConfig, String requestUrl) {
+		//path variable占位符
+		String placeholder = "/*";
+		//匹配占位符
+		String[] sourceUrlList = urlConfig.split(",");
+		for (String sourceUrl : sourceUrlList) {
+			if (sourceUrl.endsWith(placeholder)) {
+				//匹配占位符之前的url是否相同
+				if (sourceUrl.substring(0, sourceUrl.lastIndexOf(placeholder)).contains(
+						requestUrl.substring(0, requestUrl.lastIndexOf("/")))) {
+					return true;
+				}
+			} else if (sourceUrl.contains(requestUrl)) {
+				return true;
 			}
 		}
 		return false;

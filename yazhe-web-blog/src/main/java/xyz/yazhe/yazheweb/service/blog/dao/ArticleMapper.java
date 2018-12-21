@@ -1,7 +1,10 @@
 package xyz.yazhe.yazheweb.service.blog.dao;
 
 import xyz.yazhe.yazheweb.service.domain.blog.DO.Article;
+import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO;
+
+import java.util.List;
 
 public interface ArticleMapper {
     int deleteByPrimaryKey(Integer id);
@@ -29,4 +32,11 @@ public interface ArticleMapper {
 	 * @return
 	 */
 	ArticleVO getArticleVOById(Integer id);
+
+	/**
+	 * 根据条件查询文章列表
+	 * @param articleRO
+	 * @return
+	 */
+	List<ArticleVO> getArticleList(ArticleRO articleRO);
 }

@@ -63,4 +63,28 @@ public class QueryPage {
 	public void setOrderDirection(String orderDirection) {
 		this.orderDirection = orderDirection;
 	}
+
+	/**
+	 * 转化成page helper的分页参数对象
+	 * @return
+	 */
+	public PageHelperParam toPageHelperParam(){
+		PageHelperParam pageHelperParam = new PageHelperParam();
+		pageHelperParam.setPageNum(pageNum);
+		pageHelperParam.setPageSize(pageSize);
+		if (orderBy != null){
+			pageHelperParam.setOrderBy(orderBy + " " + orderDirection);
+		}
+		return pageHelperParam;
+	}
+
+	@Override
+	public String toString() {
+		return "QueryPage{" +
+				"pageNum=" + pageNum +
+				", pageSize=" + pageSize +
+				", orderBy='" + orderBy + '\'' +
+				", orderDirection='" + orderDirection + '\'' +
+				'}';
+	}
 }
