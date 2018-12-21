@@ -24,7 +24,7 @@ public class ArticleController {
 	 * @param articleRO
 	 * @return
 	 */
-	@PostMapping("/")
+	@PostMapping("/add-article")
 	public ResultVO addArticle(@RequestBody ArticleRO articleRO){
 		articleService.addArticle(articleRO);
 		return ResultVOUtil.success();
@@ -34,7 +34,7 @@ public class ArticleController {
 	 * 删除文章
 	 * @param articleId 文章id
 	 */
-	@DeleteMapping("/{articleId}")
+	@DeleteMapping("/delete-article/{articleId}")
 	public ResultVO deleteArticle(@PathVariable Integer articleId){
 		articleService.deleteArticle(articleId);
 		return ResultVOUtil.success();
@@ -44,7 +44,7 @@ public class ArticleController {
 	 * 更新文章
 	 * @param articleRO
 	 */
-	@PutMapping("/")
+	@PutMapping("/update-article")
 	public ResultVO updateArticle(@RequestBody ArticleRO articleRO){
 		articleService.updateArticle(articleRO);
 		return ResultVOUtil.success();
@@ -54,7 +54,7 @@ public class ArticleController {
 	 * 根据id获取文章
 	 * @param articleId
 	 */
-	@GetMapping("/{articleId}")
+	@GetMapping("/get-article-by-id/{articleId}")
 	public ResultVO getArticle(@PathVariable Integer articleId){
 		return ResultVOUtil.success(articleService.getArticle(articleId));
 	}
