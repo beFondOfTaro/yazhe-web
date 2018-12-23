@@ -30,7 +30,7 @@
 	</resultMap>
   <sql id="Base_Column_List" >
     id, created_user_id, title, content, reading_amount, praise_clicks, deleted, original, 
-    orignal_author_id, create_time, update_time
+    original_author_id, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -108,7 +108,7 @@
         original,
       </if>
       <if test="originalAuthorId != null" >
-        orignal_author_id,
+        original_author_id,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -178,7 +178,7 @@
         original = #{original,jdbcType=BIT},
       </if>
       <if test="originalAuthorId != null" >
-        orignal_author_id = #{originalAuthorId,jdbcType=VARCHAR},
+        original_author_id = #{originalAuthorId,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
