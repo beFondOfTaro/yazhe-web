@@ -1,13 +1,9 @@
 package xyz.yazhe.yazheweb.service.domain.base;
-
-import lombok.Data;
-
 /**
  * http请求返回的最外层对象
  * @author BeFondOfTaro
  * Created in 12:07 2018/1/18
  */
-@Data
 public class ResultVO {
     /** 错误码. */
     private Integer code;
@@ -29,4 +25,25 @@ public class ResultVO {
     public void setCode(Integer code) {
         this.code = code;
     }
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	@Override
+	public String toString() {
+		return "ResultVO{" +
+				"code=" + code +
+				", msg='" + msg + '\'' +
+				", data=" + data +
+				'}';
+	}
 }

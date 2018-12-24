@@ -1,11 +1,17 @@
 package xyz.yazhe.yazheweb.service.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.UpdateArticle;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
+
+import javax.validation.constraints.Pattern;
 
 /**
  * 设备
@@ -25,7 +31,7 @@ public class ArticleController {
 	 * @return
 	 */
 	@PostMapping("/add-article")
-	public ResultVO addArticle(@RequestBody ArticleRO articleRO){
+	public ResultVO addArticle(@RequestBody @Validated(AddArticle.class) ArticleRO articleRO){
 		articleService.addArticle(articleRO);
 		return ResultVOUtil.success();
 	}
@@ -35,7 +41,7 @@ public class ArticleController {
 	 * @param articleId 文章id
 	 */
 	@DeleteMapping("/delete-article/{articleId}")
-	public ResultVO deleteArticle(@PathVariable Integer articleId){
+	public ResultVO deleteArticle(@PathVariable @Pattern(regexp = "[0-9]+") Integer articleId){
 		articleService.deleteArticle(articleId);
 		return ResultVOUtil.success();
 	}
@@ -45,7 +51,7 @@ public class ArticleController {
 	 * @param articleRO
 	 */
 	@PutMapping("/update-article")
-	public ResultVO updateArticle(@RequestBody ArticleRO articleRO){
+	public ResultVO updateArticle(@RequestBody @Validated(UpdateArticle.class) ArticleRO articleRO){
 		articleService.updateArticle(articleRO);
 		return ResultVOUtil.success();
 	}
@@ -55,7 +61,7 @@ public class ArticleController {
 	 * @param articleId
 	 */
 	@GetMapping("/get-article-by-id/{articleId}")
-	public ResultVO getArticle(@PathVariable Integer articleId){
+	public ResultVO getArticle(@PathVariable @Pattern(regexp = "[0-9]+") Integer articleId){
 		return ResultVOUtil.success(articleService.getArticle(articleId));
 	}
 
@@ -65,7 +71,7 @@ public class ArticleController {
 	 * @return
 	 */
 	@PostMapping("/get-article-list")
-	public ResultVO getArticleList(@RequestBody ArticleRO articleRO){
+	public ResultVO getArticleList(@RequestBody @Validated(GetArticleList.class) ArticleRO articleRO){
 		return ResultVOUtil.success(articleService.getArticleList(articleRO));
 	}
 }

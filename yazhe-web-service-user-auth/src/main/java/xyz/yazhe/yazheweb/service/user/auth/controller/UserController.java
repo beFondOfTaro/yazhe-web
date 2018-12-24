@@ -1,15 +1,16 @@
 package xyz.yazhe.yazheweb.service.user.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.AddUser;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserRegisterDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
 import xyz.yazhe.yazheweb.service.user.auth.service.UserService;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -35,21 +36,21 @@ public class UserController {
 
     /**
      * 分页查询所有用户
-     * @param queryPage 分页参数
+     * @param userRO 分页参数
      * @return
      */
     @GetMapping(ResourceConstants.USER )
-    public ResultVO listUser(@Valid QueryPage queryPage){
-        return ResultVOUtil.success(userService.listUser(queryPage));
+    public ResultVO listUser(@Validated(ListUser.class) UserRO userRO){
+        return ResultVOUtil.success(userService.listUser(userRO.getQueryPage()));
     }
 
     /**
      * 添加用户
-     * @param userRegisterDTO 用户信息
+     * @param userRO 用户信息
      */
     @PostMapping(ResourceConstants.USER)
-    public ResultVO addUser(@Valid @RequestBody UserRegisterDTO userRegisterDTO){
-        userService.addUser(userRegisterDTO);
+    public ResultVO addUser(@Validated(AddUser.class) @RequestBody UserRO userRO){
+        userService.addUser(userRO);
         return ResultVOUtil.success();
     }
 

@@ -7,7 +7,6 @@ import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.user.auth.service.WebStatisticService;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
-import java.math.BigInteger;
 
 /**
  * 网站统计

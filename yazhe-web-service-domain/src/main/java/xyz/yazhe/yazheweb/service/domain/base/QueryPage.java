@@ -1,10 +1,10 @@
 package xyz.yazhe.yazheweb.service.domain.base;
 
-
-
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.DeviceValidatedGroup.QueryDeviceGroup;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -17,19 +17,21 @@ public class QueryPage {
     /**
      * 页码
      */
-    @Min(value = 1,message = "最小页数为1",groups = {QueryDeviceGroup.class})
+    @Min(value = 1,message = "最小页数为1",groups = {GetArticleList.class, ListUser.class})
+	@NotNull(message = "页码不能为空",groups = {GetArticleList.class,ListUser.class})
     private Integer pageNum = 1;
 
     /**
      * 每页记录数量
      */
-	@Min(value = 1,message = "每页最小个数为1",groups = {QueryDeviceGroup.class})
+	@Min(value = 1,message = "每页最小个数为1",groups = {GetArticleList.class, ListUser.class})
+	@NotNull(message = "每页数量不能为空",groups = {GetArticleList.class, ListUser.class})
     private Integer pageSize = 10;
 
-	@Pattern(regexp = "^[A-Za-z0-9_]+$",message = "排序字段名只能是字母、数字、下划线的组合",groups = {QueryDeviceGroup.class})
+	@Pattern(regexp = "^[A-Za-z0-9_]+$",message = "排序字段名只能是字母、数字、下划线的组合",groups = {GetArticleList.class, ListUser.class})
 	private String orderBy;
 
-	@Pattern(regexp = "asc|desc",message = "排序方向只能是asc,desc两种方向",groups = {QueryDeviceGroup.class})
+	@Pattern(regexp = "asc|desc",message = "排序方向只能是asc,desc两种方向",groups = {GetArticleList.class, ListUser.class})
 	private String orderDirection;
 
 	public Integer getPageNum() {

@@ -4,7 +4,7 @@ package xyz.yazhe.yazheweb.service.user.auth.service;
 
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserRegisterDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public interface UserService {
 
     /**
      * 添加用户
-     * @param userRegisterDTO 用户信息
+     * @param userRO 用户信息
      */
-    void addUser(UserRegisterDTO userRegisterDTO);
+    void addUser(UserRO userRO);
 
     /**
      * 为用户批量更新角色
