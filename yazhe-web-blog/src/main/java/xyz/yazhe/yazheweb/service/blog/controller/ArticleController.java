@@ -68,4 +68,15 @@ public class ArticleController {
 	public ResultVO getArticleList(@RequestBody ArticleRO articleRO){
 		return ResultVOUtil.success(articleService.getArticleList(articleRO));
 	}
+
+	/**
+	 * 点赞文章
+	 * @param articleId
+	 * @return
+	 */
+	@PostMapping("/praise-article")
+	public ResultVO praiseArticle(Integer articleId){
+		articleService.praiseArticle(articleId);
+		return ResultVOUtil.success();
+	}
 }

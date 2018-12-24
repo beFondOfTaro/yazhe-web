@@ -51,6 +51,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public ArticleVO getArticle(Integer articleId) {
+		//阅读量增加
+		articleMapper.readingAmountInc(articleId);
+		//查询文章信息
 		return articleMapper.getArticleVOById(articleId);
 	}
 
@@ -58,5 +61,10 @@ public class ArticleServiceImpl implements ArticleService {
 	public PageInfo<ArticleVO> getArticleList(ArticleRO articleRO) {
 		PageHelper.startPage(articleRO.getQueryPage().toPageHelperParam());
 		return new PageInfo<>(articleMapper.getArticleList(articleRO));
+	}
+
+	@Override
+	public void praiseArticle(Integer articleId) {
+		articleMapper.praiseClicksInc(articleId);
 	}
 }

@@ -203,5 +203,14 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
+	<update id="praiseClicksInc">
+		UPDATE t_article
+		SET praise_clicks = praise_clicks + 1
+		WHERE id = #{articleId}
+	</update>
+	<update id="readingAmountInc">
+		UPDATE t_article
+		SET reading_amount = reading_amount + 1
+		WHERE id = #{articleId}
+	</update>
 </mapper>
