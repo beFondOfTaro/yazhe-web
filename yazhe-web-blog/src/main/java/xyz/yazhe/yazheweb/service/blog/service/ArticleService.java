@@ -43,4 +43,9 @@ public interface ArticleService {
 	 */
 	PageInfo<ArticleVO> getArticleList(ArticleRO articleRO);
 
+	/**
+	 * 点赞文章
+	 * @param articleId
+	 */
+	void praiseArticle(Integer articleId);
 }

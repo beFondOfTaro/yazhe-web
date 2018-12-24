@@ -39,4 +39,18 @@ public interface ArticleMapper {
 	 * @return
 	 */
 	List<ArticleVO> getArticleList(ArticleRO articleRO);
+
+	/**
+	 * 点赞量加一
+	 * @param articleId
+	 * @return
+	 */
+	int praiseClicksInc(Integer articleId);
+
+	/**
+	 * 阅读量加一
+	 * @param articleId
+	 * @return
+	 */
+	int readingAmountInc(Integer articleId);
 }
