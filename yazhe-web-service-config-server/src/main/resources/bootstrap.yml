@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+
+eureka:
+  dev-server-url: http://localhost:6100/eureka
+  prod-server-url: http://114.116.97.243:6100/eureka
+  client:
+    service-url:
+      defaultZone: ${eureka.${spring.profiles.active}-server-url}

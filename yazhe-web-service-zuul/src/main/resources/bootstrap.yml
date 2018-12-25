@@ -11,6 +11,8 @@ spring:
               service-id: service-config-server
 
 eureka:
+  dev-server-url: http://localhost:6100/eureka
+  prod-server-url: http://114.116.97.243:6100/eureka
   client:
     service-url:
-      defaultZone: http://localhost:6100/eureka
+      defaultZone: ${eureka.${spring.profiles.active}-server-url}
