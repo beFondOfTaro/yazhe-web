@@ -3,7 +3,7 @@ package xyz.yazhe.yazheweb.service.user.auth.dao;
 import org.apache.ibatis.annotations.Param;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 
 import java.util.Date;
 import java.util.List;
@@ -19,13 +19,13 @@ public interface UserMapper {
      * @param userId 用户id
      * @return
      */
-    UserDTO getUserById(@Param("userId") String userId);
+    UserVO getUserById(@Param("userId") String userId);
 
     /**
      * 查询所有用户信息
      * @return
      */
-    List<UserDTO> listUser();
+    List<UserVO> listUser();
 
 
     /**

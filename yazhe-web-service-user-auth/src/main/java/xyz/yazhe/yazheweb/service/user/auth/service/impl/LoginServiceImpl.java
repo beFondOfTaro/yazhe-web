@@ -8,17 +8,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
-import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
-import xyz.yazhe.yazheweb.service.user.auth.dao.UserAuthMapper;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserMapper;
 import xyz.yazhe.yazheweb.service.user.auth.service.LoginService;
+import xyz.yazhe.yazheweb.service.user.auth.service.UserService;
 import xyz.yazhe.yazheweb.service.user.auth.shiro.token.CustomToken;
 import xyz.yazhe.yazheweb.service.util.DateUtil;
 import xyz.yazhe.yazheweb.service.util.JWTUtil;
+import xyz.yazhe.yazheweb.service.util.KeyUtil;
 import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
 
 import java.util.Date;
@@ -43,6 +42,8 @@ public class LoginServiceImpl implements LoginService {
 	private RedisTemplate<String,String> redisTemplate;
     @Autowired
 	private UserMapper userMapper;
+    @Autowired
+	private UserService userService;
 
     @Override
     public Map<String, Object> login(String identifier, String credential, Integer identifyType) {
@@ -54,12 +55,12 @@ public class LoginServiceImpl implements LoginService {
         //存入redis
         redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId).
 				set(token,tokenExpireTime, TimeUnit.DAYS);
-        UserDTO userDTO = userMapper.getUserById(userId);
+        UserVO userVO = userMapper.getUserById(userId);
 		userMapper.updateLastTimeByUserId(new Date(),userId);
         //返回给客户端
         Map<String,Object> res = new HashMap<>();
         res.put(HttpParamKey.TOKEN,token);
-        res.put("userInfo",userDTO);
+        res.put("userInfo", userVO);
         return res;
     }
 

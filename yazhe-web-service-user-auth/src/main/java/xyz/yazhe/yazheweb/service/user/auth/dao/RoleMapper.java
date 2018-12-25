@@ -4,7 +4,7 @@ package xyz.yazhe.yazheweb.service.user.auth.dao;
 import org.apache.ibatis.annotations.Param;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Role;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.RolePermission;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.RoleVO;
 
 import java.util.List;
 
@@ -46,5 +46,5 @@ public interface RoleMapper {
      * 查询所有角色信息
      * @return
      */
-    List<RoleDTO> listRole();
+    List<RoleVO> listRole();
 }

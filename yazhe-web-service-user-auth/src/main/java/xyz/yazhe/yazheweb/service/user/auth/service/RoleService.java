@@ -3,9 +3,8 @@ package xyz.yazhe.yazheweb.service.user.auth.service;
 
 
 import com.github.pagehelper.PageInfo;
-import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleAddDTO;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.RoleVO;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public interface RoleService {
 
     /**
      * 添加角色
-     * @param roleAddDTO 角色信息
+     * @param roleRO 角色信息
      */
-    void addRole(RoleAddDTO roleAddDTO);
+    void addRole(RoleRO roleRO);
 
     /**
      * 根据角色id删除角色
@@ -36,8 +35,8 @@ public interface RoleService {
 
     /**
      * 分页查询所有角色
-     * @param queryPage 分页参数
+     * @param roleRO
      * @return
      */
-    PageInfo<RoleDTO> listRole(QueryPage queryPage);
+    PageInfo<RoleVO> listRole(RoleRO roleRO);
 }

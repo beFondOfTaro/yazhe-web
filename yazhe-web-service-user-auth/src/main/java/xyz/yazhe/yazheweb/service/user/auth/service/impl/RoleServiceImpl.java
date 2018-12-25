@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Role;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.RolePermission;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleAddDTO;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.RoleVO;
 import xyz.yazhe.yazheweb.service.user.auth.dao.RoleMapper;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserRoleMapper;
 import xyz.yazhe.yazheweb.service.user.auth.service.RoleService;
@@ -32,16 +32,16 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public void addRole(RoleAddDTO roleAddDTO) {
+    public void addRole(RoleRO roleRO) {
         //角色表写入
         Role role = new Role();
         String roleId = KeyUtil.genUniqueKey();
-        BeanUtils.copyProperties(roleAddDTO,role);
+        BeanUtils.copyProperties(roleRO,role);
         role.setId(roleId);
         roleMapper.insertRole(role);
         //角色权限写入
         RolePermission rolePermission = new RolePermission();
-        for (String permissionId : roleAddDTO.getPermissionIdList()){
+        for (String permissionId : roleRO.getPermissionIdList()){
             rolePermission.setId(KeyUtil.genUniqueKey());
             rolePermission.setRoleId(roleId);
             rolePermission.setPermissionId(permissionId);
@@ -76,8 +76,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public PageInfo<RoleDTO> listRole(QueryPage queryPage) {
-        PageHelper.startPage(queryPage.getPageNum(),queryPage.getPageSize(),"create_time");
+    public PageInfo<RoleVO> listRole(RoleRO roleRO) {
+    	QueryPage queryPage = roleRO.getQueryPage();
+    	if (queryPage.getOrderBy() == null){
+    		queryPage.setOrderBy("create_time");
+		}
+        PageHelper.startPage(queryPage.validParam().toPageHelperParam());
         return new PageInfo<>(roleMapper.listRole());
     }
 }

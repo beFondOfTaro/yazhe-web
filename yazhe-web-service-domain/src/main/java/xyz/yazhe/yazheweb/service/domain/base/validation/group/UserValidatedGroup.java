@@ -9,4 +9,6 @@ public class UserValidatedGroup {
 	public interface AddUser{}
 
 	public interface ListUser{}
+
+	public interface RegisterAccount{}
 }

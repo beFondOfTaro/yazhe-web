@@ -14,7 +14,7 @@ import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserRole;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.UserDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserAuthMapper;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserMapper;
@@ -40,16 +40,16 @@ public class UserServiceImpl implements UserService {
     private UserAuthMapper userAuthMapper;
 
     @Override
-    public UserDTO getUserById(String userId) {
-        UserDTO userDTO = userMapper.getUserById(userId);
-        if (userDTO == null){
+    public UserVO getUserById(String userId) {
+        UserVO userVO = userMapper.getUserById(userId);
+        if (userVO == null){
             throw new ResourceException(ResourceExceptionEnum.RESOURCE_NOT_FOUND, ResourceConstants.USER);
         }
-        return userDTO;
+        return userVO;
     }
 
     @Override
-    public List<UserDTO> listUser(QueryPage queryPage) {
+    public List<UserVO> listUser(QueryPage queryPage) {
         PageHelper.startPage(queryPage);
         return userMapper.listUser();
     }

@@ -1,4 +1,4 @@
-package xyz.yazhe.yazheweb.service.domain.user.auth.DTO;
+package xyz.yazhe.yazheweb.service.domain.user.auth.VO;
 
 import lombok.Data;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created at 19:00 2018/5/14
  */
 @Data
-public class RoleDTO {
+public class RoleVO {
 
     private String id;
 

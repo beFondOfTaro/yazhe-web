@@ -23,7 +23,8 @@ public enum ResultEnum {
     DELETE_FAILED(9, "删除失败"),
 
     RESOURCE_NOT_FOUND(10, "资源不存在"),
-	DATE_INCORRECT(11,"日期不正确")
+	DATE_INCORRECT(11,"日期不正确"),
+	INVALID_PAGE_PARAM(12,"分页参数不合法")
     ;
 
     private Integer code;

@@ -1,14 +1,17 @@
 package xyz.yazhe.yazheweb.service.user.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.ListRole;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.RoleADD;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DTO.RoleAddDTO;
+import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
 import xyz.yazhe.yazheweb.service.user.auth.service.RoleService;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 /**
@@ -24,11 +27,11 @@ public class RoleController {
 
     /**
      * 添加角色
-     * @param roleAddDTO 角色信息
+     * @param roleRO 角色信息
      */
     @PostMapping(ResourceConstants.ROLE)
-    public ResultVO addRole(RoleAddDTO roleAddDTO){
-        roleService.addRole(roleAddDTO);
+    public ResultVO addRole(@Validated(RoleADD.class) RoleRO roleRO){
+        roleService.addRole(roleRO);
         return ResultVOUtil.success();
     }
 
@@ -37,7 +40,7 @@ public class RoleController {
      * @param roleId 角色id
      */
     @DeleteMapping(ResourceConstants.ROLE + "/{roleId}")
-    public ResultVO deleteRoleById(@PathVariable String roleId){
+    public ResultVO deleteRoleById(@PathVariable @Pattern(regexp = "[a-zA-Z0-9]+") String roleId){
         roleService.deleteRoleById(roleId);
         return ResultVOUtil.success();
     }
@@ -46,20 +49,21 @@ public class RoleController {
      * 更新角色的权限
      * @param roleId 角色id
      * @param permissionIdList 权限id列表
+	 * TODO 未进行参数校验
      */
     @PutMapping(ResourceConstants.ROLE + "/{roleId}")
-    public ResultVO updateRolePermission(@PathVariable String roleId, @RequestParam List<String> permissionIdList){
+    public ResultVO updateRolePermission(@PathVariable String roleId, @RequestBody List<String> permissionIdList){
         roleService.updateRolePermission(roleId,permissionIdList);
         return ResultVOUtil.success();
     }
 
     /**
      * 分页查询所有角色
-     * @param queryPage 分页参数
+     * @param roleRO
      * @return
      */
     @GetMapping(ResourceConstants.ROLE)
-    public ResultVO listRole(QueryPage queryPage){
-        return ResultVOUtil.success(roleService.listRole(queryPage));
+    public ResultVO listRole(@Validated(ListRole.class) RoleRO roleRO){
+        return ResultVOUtil.success(roleService.listRole(roleRO));
     }
 }
