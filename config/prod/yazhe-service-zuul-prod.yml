@@ -1,0 +1,19 @@
+zuul:
+  routes:
+    service-user-auth:
+      path: /user-auth/**
+      service-id: service-user-auth
+    service-blog:
+      path: /blog/**
+      service-id: service-blog
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+filter:
+  web-auth:
+    # 不进行过滤的url
+   ignored-mappings: /user-auth/login[post],/user-auth/clicks-inc
