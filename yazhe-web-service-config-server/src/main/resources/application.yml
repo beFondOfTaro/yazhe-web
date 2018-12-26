@@ -8,7 +8,7 @@ spring:
       server:
         git:
           uri: https://github.com/beFondOfTaro/yazhe-web
-          search-paths: config
+          search-paths: config/${spring.profiles.active}
           default-label: master
           username:
           password:
