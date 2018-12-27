@@ -40,6 +40,15 @@ public class WebAuthFilter extends ZuulFilter{
 	private static final Logger logger = LoggerFactory.getLogger(WebAuthFilter.class);
 
 	/**
+	 * url表达式的分隔符
+	 */
+	private static final String URL_EXPRESSION_SEPARATOR = ",";
+	/**
+	 * path variable占位符
+	 */
+	private static final String PLACEHOLDER = "/*";
+
+	/**
 	 * 不进行过滤的url
 	 */
 	@Value("${filter.web-auth.ignored-mappings}")
@@ -59,24 +68,9 @@ public class WebAuthFilter extends ZuulFilter{
 		//判断不进行过滤的url
 		String requestUrl = request.getRequestURI();
 		String requestMethod = request.getMethod().toLowerCase();
-		for (String ignoredMapping : ignoredMappings.split(",")){
-			String ignoredUrl;
-			String mappedMethods;
-			int leftIdx = ignoredMapping.indexOf("[");
-			int rightIdx = ignoredMapping.indexOf("]");
-			//如果存在[]，则需要匹配method
-			if (leftIdx > -1 && rightIdx > -1){
-				ignoredUrl = ignoredMapping.substring(0,leftIdx);
-				mappedMethods = ignoredMapping.substring(leftIdx+1,rightIdx).toLowerCase();
-				if (ignoredUrl.contains(requestUrl) && mappedMethods.contains(requestMethod)){
-					return null;
-				}
-			}else {
-				//不存在[]，直接匹配url
-				ignoredUrl = ignoredMapping;
-				if (ignoredUrl.contains(requestUrl)){
-					return null;
-				}
+		for (String ignoredMapping : ignoredMappings.split(URL_EXPRESSION_SEPARATOR)){
+			if (matchUrl(requestUrl, requestMethod, ignoredMapping)){
+				return null;
 			}
 		}
 		//获取token
@@ -101,12 +95,46 @@ public class WebAuthFilter extends ZuulFilter{
 			return null;
 		}
 		//校验用户权限
-		if (!checkPermission(userId,requestUrl)){
+		if (!checkPermission(userId,requestUrl,requestMethod)){
 			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(ResultEnum.UNAUTHORIZED)));
 			requestContext.setResponseStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
 			requestContext.setSendZuulResponse(false);
 		}
 		return null;
+	}
+
+	/**
+	 * 匹配url，支持sourceUrl结尾为path variable占位符的形式，如test/*可以匹配请求url为test/1
+	 * @param requestUrl 请求的url
+	 * @param requestMethod 请求的方法
+	 * @param urlExpression 源url，即用户权限表中的url
+	 * @return
+	 */
+	private boolean matchUrl(String requestUrl, String requestMethod, String urlExpression) {
+		for (String sourceUrl : urlExpression.split(URL_EXPRESSION_SEPARATOR)) {
+			String url;
+			String mappedMethods;
+			int leftIdx = urlExpression.indexOf("[");
+			int rightIdx = urlExpression.indexOf("]");
+			//如果存在[]，则需要匹配method
+			if (leftIdx > -1 && rightIdx > -1){
+				url = urlExpression.substring(0,leftIdx);
+				mappedMethods = urlExpression.substring(leftIdx+1,rightIdx).toLowerCase();
+				return url.contains(requestUrl) && mappedMethods.contains(requestMethod);
+			}else {
+				//不存在[]，直接匹配url
+				if (sourceUrl.endsWith(PLACEHOLDER)) {
+					//匹配占位符之前的url是否相同
+					if (sourceUrl.substring(0, sourceUrl.lastIndexOf(PLACEHOLDER)).contains(
+							requestUrl.substring(0, requestUrl.lastIndexOf("/")))) {
+						return true;
+					}
+				} else if (sourceUrl.contains(requestUrl)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -128,9 +156,10 @@ public class WebAuthFilter extends ZuulFilter{
 	 * 校验用户权限
 	 * @param userId
 	 * @param requestUrl
+	 * @param requestMethod
 	 * @return
 	 */
-	private boolean checkPermission(String userId,String requestUrl){
+	private boolean checkPermission(String userId,String requestUrl,String requestMethod){
 		String userTokenKey = CommonConstants.RedisKey.USER_PERMISSION_PREFIX + userId;
 		//先查询缓存
 		if (redisTemplate.hasKey(userTokenKey)){
@@ -138,7 +167,7 @@ public class WebAuthFilter extends ZuulFilter{
 			boundListOperations.expire(CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME,TimeUnit.SECONDS);
 			List<Permission> permissionList = gson.fromJson(boundListOperations.get(),new TypeToken<List<Permission>>(){}.getType());
 			for (Object permission : permissionList) {
-				if (matchUrl(((Permission)permission).getUrl(),requestUrl)) {
+				if (matchUrl(requestUrl,requestMethod,((Permission)permission).getUrl())) {
 					return true;
 				}
 			}
@@ -148,7 +177,7 @@ public class WebAuthFilter extends ZuulFilter{
 			//缓存到redis
 			redisTemplate.boundValueOps(userTokenKey).set(permissionList.toString(),CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
 			for (JsonElement jsonElement : permissionList) {
-				if (matchUrl(jsonElement.getAsJsonObject().get("url").getAsString(),requestUrl)) {
+				if (matchUrl(requestUrl,requestMethod,jsonElement.getAsJsonObject().get("url").getAsString())) {
 					return true;
 				}
 			}
@@ -156,28 +185,4 @@ public class WebAuthFilter extends ZuulFilter{
 		return false;
 	}
 
-	/**
-	 * 匹配url，支持sourceUrl结尾为path variable占位符的形式，如test/*可以匹配请求url为test/1
-	 * @param urlConfig 源url，即用户权限表中的url
-	 * @param requestUrl 请求的url
-	 * @return
-	 */
-	private boolean matchUrl(String urlConfig, String requestUrl) {
-		//path variable占位符
-		String placeholder = "/*";
-		//匹配占位符
-		String[] sourceUrlList = urlConfig.split(",");
-		for (String sourceUrl : sourceUrlList) {
-			if (sourceUrl.endsWith(placeholder)) {
-				//匹配占位符之前的url是否相同
-				if (sourceUrl.substring(0, sourceUrl.lastIndexOf(placeholder)).contains(
-						requestUrl.substring(0, requestUrl.lastIndexOf("/")))) {
-					return true;
-				}
-			} else if (sourceUrl.contains(requestUrl)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

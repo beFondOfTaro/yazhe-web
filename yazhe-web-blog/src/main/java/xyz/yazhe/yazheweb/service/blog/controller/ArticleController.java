@@ -80,8 +80,8 @@ public class ArticleController {
 	 * @param articleId
 	 * @return
 	 */
-	@PostMapping("/praise-article")
-	public ResultVO praiseArticle(Integer articleId){
+	@PostMapping("/praise-article/{articleId}")
+	public ResultVO praiseArticle(@PathVariable Integer articleId){
 		articleService.praiseArticle(articleId);
 		return ResultVOUtil.success();
 	}
