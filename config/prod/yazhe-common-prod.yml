@@ -4,7 +4,7 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
         url: jdbc:mysql://114.116.104.101:3306/yazhe_web?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
         username: root
-        password: "!A61RSTby"
+        password: ENC(DWbS/K2vnchbNktGOLv/T2QdC9kF8Vpr)
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
