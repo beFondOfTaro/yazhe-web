@@ -68,10 +68,8 @@ public class WebAuthFilter extends ZuulFilter{
 		//判断不进行过滤的url
 		String requestUrl = request.getRequestURI();
 		String requestMethod = request.getMethod().toLowerCase();
-		for (String ignoredMapping : ignoredMappings.split(URL_EXPRESSION_SEPARATOR)){
-			if (matchUrl(requestUrl, requestMethod, ignoredMapping)){
-				return null;
-			}
+		if (matchUrl(requestUrl, requestMethod, ignoredMappings)){
+			return null;
 		}
 		//获取token
 		String token = request.getHeader(HttpParamKey.TOKEN);
@@ -114,13 +112,15 @@ public class WebAuthFilter extends ZuulFilter{
 		for (String sourceUrl : urlExpression.split(URL_EXPRESSION_SEPARATOR)) {
 			String url;
 			String mappedMethods;
-			int leftIdx = urlExpression.indexOf("[");
-			int rightIdx = urlExpression.indexOf("]");
+			int leftIdx = sourceUrl.indexOf("[");
+			int rightIdx = sourceUrl.indexOf("]");
 			//如果存在[]，则需要匹配method
 			if (leftIdx > -1 && rightIdx > -1){
-				url = urlExpression.substring(0,leftIdx);
-				mappedMethods = urlExpression.substring(leftIdx+1,rightIdx).toLowerCase();
-				return url.contains(requestUrl) && mappedMethods.contains(requestMethod);
+				url = sourceUrl.substring(0,leftIdx);
+				mappedMethods = sourceUrl.substring(leftIdx+1,rightIdx).toLowerCase();
+				if (url.contains(requestUrl) && mappedMethods.contains(requestMethod)){
+					return true;
+				}
 			}else {
 				//不存在[]，直接匹配url
 				if (sourceUrl.endsWith(PLACEHOLDER)) {
