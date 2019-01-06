@@ -3,6 +3,7 @@ package xyz.yazhe.yazheweb.service.user.auth.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
@@ -39,7 +40,7 @@ public class LoginController {
     }
 
     @PostMapping("register-account")
-    public ResultVO registerAccount(@Validated(RegisterAccount.class) UserRO userRO){
+    public ResultVO registerAccount(@Validated(RegisterAccount.class) @RequestBody UserRO userRO){
     	//设置为普通用户
     	userRO.setRoleId("2");
     	userService.addUser(userRO);
