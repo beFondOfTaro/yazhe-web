@@ -17,5 +17,5 @@ filter:
   web-auth:
     # 不进行过滤的url
    ignored-mappings: >
-     /user-auth/login[post],/register-account,/user-auth/clicks-inc,/blog/article/get-article-list,/blog/article/get-article-by-id/*,
+     /user-auth/login[post],/user-auth/register-account,/user-auth/clicks-inc,/blog/article/get-article-list,/blog/article/get-article-by-id/*,
      /blog/article/praise-article/*
