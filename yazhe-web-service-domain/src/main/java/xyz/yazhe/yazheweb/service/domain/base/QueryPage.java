@@ -1,11 +1,10 @@
 package xyz.yazhe.yazheweb.service.domain.base;
 
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.ListRole;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
+import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -89,7 +88,7 @@ public class QueryPage {
 	 */
 	public QueryPage validParam(){
 		if (orderBy != null || orderDirection == null){
-			throw new CommonException(ResultEnum.INVALID_PAGE_PARAM);
+			throw new BusinessException(ResultEnum.INVALID_PAGE_PARAM);
 		}
 		return this;
 	}

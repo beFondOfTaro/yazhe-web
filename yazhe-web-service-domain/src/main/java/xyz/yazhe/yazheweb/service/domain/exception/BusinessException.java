@@ -9,16 +9,16 @@ import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
  * Created at 13:56 2018/3/14
  */
 @Getter
-public class CommonException extends RuntimeException{
+public class BusinessException extends RuntimeException{
 
     private Integer code;
 
-    public CommonException(ResultEnum resultEnum){
+    public BusinessException(ResultEnum resultEnum){
         super(resultEnum.getMessage());
         this.code = resultEnum.getCode();
     }
 
-    public CommonException(Integer code, String message){
+    public BusinessException(Integer code, String message){
         super(message);
         this.code = code;
     }

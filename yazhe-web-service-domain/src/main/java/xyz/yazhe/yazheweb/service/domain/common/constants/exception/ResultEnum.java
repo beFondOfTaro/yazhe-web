@@ -24,7 +24,8 @@ public enum ResultEnum {
 
     RESOURCE_NOT_FOUND(10, "资源不存在"),
 	DATE_INCORRECT(11,"日期不正确"),
-	INVALID_PAGE_PARAM(12,"分页参数不合法")
+	INVALID_PAGE_PARAM(12,"分页参数不合法"),
+	RESOURCE_EXCEPTION(11, "资源异常")
     ;
 
     private Integer code;

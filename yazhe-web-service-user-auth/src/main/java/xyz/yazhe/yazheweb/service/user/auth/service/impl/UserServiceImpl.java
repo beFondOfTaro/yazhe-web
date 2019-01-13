@@ -9,7 +9,7 @@ import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResourceExceptionEnum;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
+import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
 		userRole.setUserId(userId);
 		userRole.setRoleId(userRO.getRoleId());
 		if (1 != userRoleMapper.insertUserRole(userRole)){
-			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 		userAuth.setIdentifier(userRO.getUsername());
 		userAuth.setCredential(userRO.getPassword());
 		if (1 != userMapper.insertUserAuth(userAuth)){
-			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 			user.setAddress("");
 		}
 		if (1 != userMapper.insertUser(user)){
-			throw new CommonException(ResultEnum.UNKNOWN_ERROR);
+			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
 		}
 		return userId;
 	}

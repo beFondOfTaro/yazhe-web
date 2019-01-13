@@ -17,7 +17,7 @@ import org.springframework.util.StringUtils;
 import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
 import xyz.yazhe.yazheweb.service.util.GsonUtil;
 import xyz.yazhe.yazheweb.service.util.JWTUtil;
@@ -77,17 +77,17 @@ public class WebAuthFilter extends ZuulFilter{
 		try {
 			//校验token
 			if (StringUtils.isEmpty(token)){
-				throw new CommonException(ResultEnum.INVALID_TOKEN);
+				throw new VerificationException(ResultEnum.INVALID_TOKEN.getMessage());
 			}
 			userId = JWTUtil.getUserId(token);
 			if (userId == null || !token.equals(redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId).get())){
 				//返回错误
-				throw new CommonException(ResultEnum.TOKEN_EXPIRED);
+				throw new VerificationException(ResultEnum.TOKEN_EXPIRED.getMessage());
 			}
 		}
-		catch (CommonException e){
+		catch (VerificationException e){
 			logger.error(e.getMessage());
-			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(e.getCode(),e.getMessage())));
+			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(),e.getMessage())));
 			requestContext.setResponseStatusCode(401);
 			requestContext.setSendZuulResponse(false);
 			return null;

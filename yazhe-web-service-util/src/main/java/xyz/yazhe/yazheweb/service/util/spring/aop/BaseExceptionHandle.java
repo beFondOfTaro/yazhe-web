@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResourceExceptionEnum;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.CommonException;
+import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
+import xyz.yazhe.yazheweb.service.domain.exception.SystemException;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Controller的统一异常处理
@@ -22,45 +22,72 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class BaseExceptionHandle {
 
-    @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public ResultVO handle(Exception e, HttpServletResponse response){
-        //如果是我们自定义的异常
-        if (e instanceof CommonException){
-            CommonException commonException = (CommonException) e;
-            log.error(e.getMessage(),e);
-            return ResultVOUtil.error(commonException.getCode(),commonException.getMessage());
-        }
-        //资源异常
-        else if (e instanceof ResourceException){
-			log.error(e.getMessage(),e);
-            ResourceException resourceException = (ResourceException) e;
-            ResourceExceptionEnum resourceExceptionEnum = resourceException.getResourceExceptionEnum();
-            return ResultVOUtil.error(resourceExceptionEnum.getCode(),
-                    "资源：" + resourceException.getResource() + ";" + resourceExceptionEnum.getException());
-        }else if (e instanceof MethodArgumentNotValidException){
-        	MethodArgumentNotValidException exception = (MethodArgumentNotValidException)e;
-        	BindingResult bindingResult = exception.getBindingResult();
-        	StringBuilder stringBuilder = new StringBuilder();
-        	stringBuilder.append("参数校验失败！");
-        	bindingResult.getFieldErrors().forEach(fieldError -> {
-				stringBuilder.append("[字段名：");
-				stringBuilder.append(fieldError.getField());
-				stringBuilder.append(",错误信息:");
-				stringBuilder.append(fieldError.getDefaultMessage());
-				stringBuilder.append("]");
-			});
-        	log.error(exception.getMessage(), e);
-        	return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(), stringBuilder.toString());
-		}
-        //如果不是我们自定义的异常
-        else {
-            log.error("【系统异常】{}",e);
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return ResultVOUtil.error(
-                    ResultEnum.UNKNOWN_ERROR.getCode(),
-                    e.getMessage());
-        }
-    }
+	@ExceptionHandler(BusinessException.class)
+	@ResponseBody
+	public ResultVO handleBusinessException(BusinessException e) {
+		log.error(e.getMessage(),e);
+		return ResultVOUtil.error(e.getCode(),e.getMessage());
+	}
+
+	@ExceptionHandler(ResourceException.class)
+	@ResponseBody
+	public ResultVO handleResourceException(ResourceException e) {
+		log.error(e.getMessage(),e);
+		ResourceExceptionEnum resourceExceptionEnum = e.getResourceExceptionEnum();
+		return ResultVOUtil.error(ResultEnum.RESOURCE_EXCEPTION.getCode(),
+				"资源：" + e.getResource() + ";" + resourceExceptionEnum.getException());
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseBody
+	public ResultVO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+		BindingResult bindingResult = e.getBindingResult();
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("参数校验失败！");
+		bindingResult.getFieldErrors().forEach(fieldError -> {
+			stringBuilder.append("[字段名：");
+			stringBuilder.append(fieldError.getField());
+			stringBuilder.append(",错误信息:");
+			stringBuilder.append(fieldError.getDefaultMessage());
+			stringBuilder.append("]");
+		});
+		log.error(e.getMessage(), e);
+		return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(), stringBuilder.toString());
+	}
+
+	@ExceptionHandler(VerificationException.class)
+	@ResponseBody
+	public ResultVO handleVerificationException(VerificationException e) {
+		log.error(e.getMessage(),e);
+		return ResultVOUtil.error(
+				ResultEnum.PARAM_ERROR.getCode(),
+				"参数校验失败！" + e.getMessage());
+	}
+
+	@ExceptionHandler(SystemException.class)
+	@ResponseBody
+	public ResultVO handleException(SystemException e) {
+		log.error(e.getMessage(),e);
+		return ResultVOUtil.error(
+				ResultEnum.UNKNOWN_ERROR.getCode(),
+				e.getMessage());
+	}
+
+	@ExceptionHandler(Exception.class)
+	@ResponseBody
+	public ResultVO handleException(Exception e) {
+		log.error(e.getMessage(),e);
+		return ResultVOUtil.error(
+				ResultEnum.UNKNOWN_ERROR.getCode(),
+				e.getMessage());
+	}
+
+	@ExceptionHandler(Throwable.class)
+	@ResponseBody
+	public ResultVO handleThrowable(Throwable e) {
+		log.error(e.getMessage(),e);
+		return ResultVOUtil.error(
+				ResultEnum.UNKNOWN_ERROR.getCode(),
+				e.getMessage());
+	}
 }
