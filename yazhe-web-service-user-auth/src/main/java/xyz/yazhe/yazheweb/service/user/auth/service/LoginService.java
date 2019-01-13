@@ -1,8 +1,6 @@
 package xyz.yazhe.yazheweb.service.user.auth.service;
 
 
-import xyz.yazhe.yazheweb.service.domain.exception.UserLoginException;
-
 import java.util.Map;
 
 /**
@@ -18,9 +16,8 @@ public interface LoginService {
      * @param credential
      * @param identifyType
      * @return 用户通行token
-	 * @exception UserLoginException 用户名或密码错误
      */
-    Map<String,Object> login(String identifier, String credential, Integer identifyType) throws UserLoginException;
+    Map<String,Object> login(String identifier, String credential, Integer identifyType);
 
 	/**
 	 * 注销

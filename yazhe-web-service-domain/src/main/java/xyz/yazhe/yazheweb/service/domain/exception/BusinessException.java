@@ -1,7 +1,6 @@
 package xyz.yazhe.yazheweb.service.domain.exception;
 
 import lombok.Getter;
-import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 
 /**
  * 通用异常
@@ -11,15 +10,7 @@ import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
 @Getter
 public class BusinessException extends RuntimeException{
 
-    private Integer code;
-
-    public BusinessException(ResultEnum resultEnum){
-        super(resultEnum.getMessage());
-        this.code = resultEnum.getCode();
-    }
-
-    public BusinessException(Integer code, String message){
-        super(message);
-        this.code = code;
-    }
+	public BusinessException(String message) {
+		super(message);
+	}
 }

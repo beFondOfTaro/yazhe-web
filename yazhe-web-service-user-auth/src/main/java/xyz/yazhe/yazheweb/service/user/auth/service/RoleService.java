@@ -3,6 +3,7 @@ package xyz.yazhe.yazheweb.service.user.auth.service;
 
 
 import com.github.pagehelper.PageInfo;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
 import xyz.yazhe.yazheweb.service.domain.user.auth.VO.RoleVO;
 
@@ -38,5 +39,5 @@ public interface RoleService {
      * @param roleRO
      * @return
      */
-    PageInfo<RoleVO> listRole(RoleRO roleRO);
+    PageInfo<RoleVO> listRole(RoleRO roleRO) throws VerificationException;
 }

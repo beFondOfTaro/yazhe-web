@@ -8,9 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResourceExceptionEnum;
-import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.exception.ResourceException;
+import xyz.yazhe.yazheweb.service.domain.exception.SystemException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserAuth;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.UserRole;
@@ -60,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(UserRO userRO) {
+    public void addUser(UserRO userRO) throws SystemException {
 		String userId = insertUser(userRO);
 		insertUserAuthTable(userRO, userId);
 		insertUserRole(userRO, userId);
@@ -71,13 +70,13 @@ public class UserServiceImpl implements UserService {
 	 * @param userRO
 	 * @param userId 用户id
 	 */
-	private void insertUserRole(UserRO userRO, String userId) {
+	private void insertUserRole(UserRO userRO, String userId) throws SystemException {
 		UserRole userRole = new UserRole();
 		userRole.setId(KeyUtil.genUniqueKey());
 		userRole.setUserId(userId);
 		userRole.setRoleId(userRO.getRoleId());
 		if (1 != userRoleMapper.insertUserRole(userRole)){
-			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
+			throw new SystemException("插入user_role表失败");
 		}
 	}
 
@@ -86,7 +85,7 @@ public class UserServiceImpl implements UserService {
 	 * @param userRO
 	 * @param userId
 	 */
-	private void insertUserAuthTable(UserRO userRO, String userId) {
+	private void insertUserAuthTable(UserRO userRO, String userId) throws SystemException {
 		UserAuth userAuth = new UserAuth();
 		userAuth.setId(KeyUtil.genUniqueKey());
 		userAuth.setUserId(userId);
@@ -94,7 +93,7 @@ public class UserServiceImpl implements UserService {
 		userAuth.setIdentifier(userRO.getUsername());
 		userAuth.setCredential(userRO.getPassword());
 		if (1 != userMapper.insertUserAuth(userAuth)){
-			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
+			throw new SystemException("插入user_auth表失败");
 		}
 	}
 
@@ -103,8 +102,7 @@ public class UserServiceImpl implements UserService {
 	 * @param userRO
 	 * @return 用户id
 	 */
-	private String insertUser(UserRO userRO) {
-
+	private String insertUser(UserRO userRO) throws SystemException {
 		User user = new User();
 		BeanUtils.copyProperties(userRO,user);
 		String userId = KeyUtil.genUniqueKey();
@@ -113,7 +111,7 @@ public class UserServiceImpl implements UserService {
 			user.setAddress("");
 		}
 		if (1 != userMapper.insertUser(user)){
-			throw new BusinessException(ResultEnum.UNKNOWN_ERROR);
+			throw new SystemException("插入user表失败");
 		}
 		return userId;
 	}

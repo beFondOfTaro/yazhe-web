@@ -9,17 +9,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
-import xyz.yazhe.yazheweb.service.domain.exception.UserLoginException;
-import xyz.yazhe.yazheweb.service.domain.user.auth.DO.User;
-import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
+import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 import xyz.yazhe.yazheweb.service.user.auth.dao.UserMapper;
 import xyz.yazhe.yazheweb.service.user.auth.service.LoginService;
-import xyz.yazhe.yazheweb.service.user.auth.service.UserService;
 import xyz.yazhe.yazheweb.service.user.auth.shiro.token.CustomToken;
 import xyz.yazhe.yazheweb.service.util.DateUtil;
 import xyz.yazhe.yazheweb.service.util.JWTUtil;
-import xyz.yazhe.yazheweb.service.util.KeyUtil;
 import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
 
 import java.util.Date;
@@ -46,12 +43,12 @@ public class LoginServiceImpl implements LoginService {
 	private UserMapper userMapper;
 
     @Override
-    public Map<String, Object> login(String identifier, String credential, Integer identifyType) throws UserLoginException {
+    public Map<String, Object> login(String identifier, String credential, Integer identifyType) {
 		Subject subject = SecurityUtils.getSubject();
 		try {
 			subject.login(new CustomToken(identifier,credential,System.currentTimeMillis(),identifyType));
 		}catch (AuthenticationException e){
-			throw new UserLoginException("用户名或密码错误");
+			throw new BusinessException(ResultEnum.PASSWORD_INCORRECT.getMessage());
 		}
 
 		String userId = (String) subject.getPrincipals().getPrimaryPrincipal();

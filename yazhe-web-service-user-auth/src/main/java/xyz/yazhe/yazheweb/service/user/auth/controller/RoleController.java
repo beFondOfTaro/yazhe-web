@@ -7,6 +7,7 @@ import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.ListRole;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.RoleADD;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
 import xyz.yazhe.yazheweb.service.user.auth.service.RoleService;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
@@ -63,7 +64,7 @@ public class RoleController {
      * @return
      */
     @GetMapping(ResourceConstants.ROLE)
-    public ResultVO listRole(@Validated(ListRole.class) RoleRO roleRO){
+    public ResultVO listRole(@Validated(ListRole.class) RoleRO roleRO) throws VerificationException {
         return ResultVOUtil.success(roleService.listRole(roleRO));
     }
 }

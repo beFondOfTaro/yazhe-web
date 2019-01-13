@@ -3,6 +3,7 @@ package xyz.yazhe.yazheweb.service.user.auth.service;
 
 
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
+import xyz.yazhe.yazheweb.service.domain.exception.SystemException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
 
@@ -39,7 +40,7 @@ public interface UserService {
      * 添加用户
      * @param userRO 用户信息
      */
-    void addUser(UserRO userRO);
+    void addUser(UserRO userRO) throws SystemException;
 
     /**
      * 为用户批量更新角色

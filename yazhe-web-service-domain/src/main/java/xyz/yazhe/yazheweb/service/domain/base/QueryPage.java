@@ -3,8 +3,7 @@ package xyz.yazhe.yazheweb.service.domain.base;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.RoleValidatedGroup.ListRole;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
-import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
-import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -86,9 +85,9 @@ public class QueryPage {
 	/**
 	 * 校验参数，查询前必须校验
 	 */
-	public QueryPage validParam(){
+	public QueryPage validParam() throws VerificationException {
 		if (orderBy != null || orderDirection == null){
-			throw new BusinessException(ResultEnum.INVALID_PAGE_PARAM);
+			throw new VerificationException("排序字段不合法");
 		}
 		return this;
 	}

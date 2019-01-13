@@ -2,7 +2,6 @@ package xyz.yazhe.yazheweb.service.domain.user.auth.RO;
 
 import org.hibernate.validator.constraints.Email;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.AddUser;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.RegisterAccount;
@@ -20,12 +19,15 @@ public class UserRO {
 	 * 用户名
 	 */
 	@NotNull(message = "用户名不能为空",groups = {AddUser.class, RegisterAccount.class})
+	@Pattern(regexp = ".{6,16}", groups = {AddUser.class, RegisterAccount.class}, message = "用户名长度必须为6-16位")
 	private String username;
 
 	/**
 	 * 密码
 	 */
 	@NotNull(message = "密码不能为空",groups = {AddUser.class, RegisterAccount.class})
+	@Pattern(regexp = "^[a-z0-9_\\-!@#$%^]{6,18}$", groups = {AddUser.class, RegisterAccount.class},
+			message = "密码长度必须为6-18位，只能包含英文字母、数字、下划线以及-!@#$%这些特殊字符")
 	private String password;
 
 	/**

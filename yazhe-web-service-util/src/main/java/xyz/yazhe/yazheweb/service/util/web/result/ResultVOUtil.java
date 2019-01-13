@@ -36,4 +36,15 @@ public class ResultVOUtil{
         resultVO.setMsg(resultEnum.getMessage());
         return resultVO;
     }
+
+	/**
+	 * 返回系统异常
+	 * @return
+	 */
+	public static ResultVO retSysError(){
+    	ResultVO resultVO = new ResultVO();
+    	resultVO.setCode(ResultEnum.UNKNOWN_ERROR.getCode());
+    	resultVO.setMsg(ResultEnum.UNKNOWN_ERROR.getMessage());
+    	return resultVO;
+	}
 }

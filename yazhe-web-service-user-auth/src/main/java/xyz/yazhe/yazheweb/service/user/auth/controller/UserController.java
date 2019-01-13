@@ -7,6 +7,7 @@ import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.AddUser;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.UserValidatedGroup.ListUser;
 import xyz.yazhe.yazheweb.service.domain.common.constants.ResourceConstants;
+import xyz.yazhe.yazheweb.service.domain.exception.SystemException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.UserRO;
 import xyz.yazhe.yazheweb.service.user.auth.service.UserService;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
@@ -49,7 +50,7 @@ public class UserController {
      * @param userRO 用户信息
      */
     @PostMapping(ResourceConstants.USER)
-    public ResultVO addUser(@Validated(AddUser.class) @RequestBody UserRO userRO){
+    public ResultVO addUser(@Validated(AddUser.class) @RequestBody UserRO userRO) throws SystemException {
         userService.addUser(userRO);
         return ResultVOUtil.success();
     }

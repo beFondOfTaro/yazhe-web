@@ -26,7 +26,7 @@ public class BaseExceptionHandle {
 	@ResponseBody
 	public ResultVO handleBusinessException(BusinessException e) {
 		log.error(e.getMessage(),e);
-		return ResultVOUtil.error(e.getCode(),e.getMessage());
+		return ResultVOUtil.error(ResultEnum.BUSINESS_EXCEPTION.getCode(),e.getMessage());
 	}
 
 	@ExceptionHandler(ResourceException.class)
@@ -68,26 +68,20 @@ public class BaseExceptionHandle {
 	@ResponseBody
 	public ResultVO handleException(SystemException e) {
 		log.error(e.getMessage(),e);
-		return ResultVOUtil.error(
-				ResultEnum.UNKNOWN_ERROR.getCode(),
-				e.getMessage());
+		return ResultVOUtil.retSysError();
 	}
 
 	@ExceptionHandler(Exception.class)
 	@ResponseBody
 	public ResultVO handleException(Exception e) {
 		log.error(e.getMessage(),e);
-		return ResultVOUtil.error(
-				ResultEnum.UNKNOWN_ERROR.getCode(),
-				e.getMessage());
+		return ResultVOUtil.retSysError();
 	}
 
 	@ExceptionHandler(Throwable.class)
 	@ResponseBody
 	public ResultVO handleThrowable(Throwable e) {
 		log.error(e.getMessage(),e);
-		return ResultVOUtil.error(
-				ResultEnum.UNKNOWN_ERROR.getCode(),
-				e.getMessage());
+		return ResultVOUtil.retSysError();
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Role;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.RolePermission;
 import xyz.yazhe.yazheweb.service.domain.user.auth.RO.RoleRO;
@@ -76,7 +77,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public PageInfo<RoleVO> listRole(RoleRO roleRO) {
+    public PageInfo<RoleVO> listRole(RoleRO roleRO) throws VerificationException {
     	QueryPage queryPage = roleRO.getQueryPage();
     	if (queryPage.getOrderBy() == null){
     		queryPage.setOrderBy("create_time");
