@@ -45,10 +45,10 @@
             permission_name,
             required
         FROM `user`
-            JOIN `user_role` ON user.id = user_role.user_id
-            JOIN role ON user_role.role_id = role.id
-            JOIN role_permission ON role.id = role_permission.role_id
-            JOIN permission ON role_permission.permission_id = permission.id
+            left JOIN `user_role` ON user.id = user_role.user_id
+            left JOIN role ON user_role.role_id = role.id
+            left join role_permission ON role.id = role_permission.role_id
+            left join permission ON role_permission.permission_id = permission.id
     </sql>
 
     <insert id="insertUser">

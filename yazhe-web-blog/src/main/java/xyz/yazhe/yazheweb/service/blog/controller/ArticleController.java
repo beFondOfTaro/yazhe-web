@@ -8,7 +8,9 @@ import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.UpdateArticle;
+import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
 import javax.validation.constraints.Pattern;
@@ -84,5 +86,16 @@ public class ArticleController {
 	public ResultVO praiseArticle(@PathVariable Integer articleId){
 		articleService.praiseArticle(articleId);
 		return ResultVOUtil.success();
+	}
+
+	/**
+	 * 根据条件查询评论
+	 * @param articleCommentRo
+	 * @return
+	 */
+	@PostMapping("/query-comment-by-condition")
+	public ResultVO getCommentByCondition(ArticleCommentRo articleCommentRo) throws VerificationException {
+		articleCommentRo.getQueryPage().validParam();
+		return ResultVOUtil.success(articleService.getCommentByCondition(articleCommentRo));
 	}
 }

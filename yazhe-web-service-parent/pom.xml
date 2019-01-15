@@ -62,7 +62,7 @@
 				<artifactId>mybatis-generator-maven-plugin</artifactId>
 				<version>1.3.2</version>
 				<configuration>
-					<configurationFile>java/src/main/resources/generator/mybatis-gen.xml</configurationFile>
+					<configurationFile>src/main/resources/generator/mybatis-gen.xml</configurationFile>
 				</configuration>
 			</plugin>
 		</plugins>

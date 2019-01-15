@@ -1,7 +1,9 @@
 package xyz.yazhe.yazheweb.service.blog.service;
 
 import com.github.pagehelper.PageInfo;
+import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
+import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleCommentVo;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO;
 
 /**
@@ -48,4 +50,11 @@ public interface ArticleService {
 	 * @param articleId
 	 */
 	void praiseArticle(Integer articleId);
+
+	/**
+	 * 获取最新评论
+	 * @param articleCommentRo
+	 * @return
+	 */
+	PageInfo<ArticleCommentVo> getCommentByCondition(ArticleCommentRo articleCommentRo);
 }

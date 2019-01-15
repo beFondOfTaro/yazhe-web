@@ -5,10 +5,13 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.yazhe.yazheweb.service.blog.dao.ArticleCommentMapper;
 import xyz.yazhe.yazheweb.service.blog.dao.ArticleMapper;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
 import xyz.yazhe.yazheweb.service.domain.blog.DO.Article;
+import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
+import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleCommentVo;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO;
 import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
 
@@ -21,6 +24,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	private ArticleMapper articleMapper;
+	@Autowired
+	private ArticleCommentMapper articleCommentMapper;
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
@@ -66,5 +71,11 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void praiseArticle(Integer articleId) {
 		articleMapper.praiseClicksInc(articleId);
+	}
+
+	@Override
+	public PageInfo<ArticleCommentVo> getCommentByCondition(ArticleCommentRo articleCommentRo) {
+		PageHelper.startPage(articleCommentRo.getQueryPage().toPageHelperParam());
+		return new PageInfo<>(articleCommentMapper.queryCommentByCondition(articleCommentRo));
 	}
 }
