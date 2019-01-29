@@ -5,7 +5,7 @@ spring:
     config:
       label: master
       name: yazhe
-      profile: common-${spring.profiles.active},service-user-auth-${spring.profiles.active},redis-${spring.profiles.active}
+      profile: common-${spring.profiles.active},service-user-auth-${spring.profiles.active},redis-${spring.profiles.active},file-${spring.profiles.active}
       discovery:
         enabled: true
         service-id: service-config-server
@@ -22,4 +22,4 @@ eureka:
 
 jasypt:
   encryptor:
-    password:
+    password: "!A61RSTby"

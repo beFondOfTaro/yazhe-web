@@ -3,17 +3,21 @@ package xyz.yazhe.yazheweb.service.blog.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
+import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.UpdateArticle;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
+import xyz.yazhe.yazheweb.service.domain.common.constants.FileInfoType;
 import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.util.web.result.ResultVOUtil;
 
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * 设备
@@ -98,4 +102,23 @@ public class ArticleController {
 		articleCommentRo.getQueryPage().validParam();
 		return ResultVOUtil.success(articleService.getCommentByCondition(articleCommentRo));
 	}
+
+	/**
+	 * 上传文章图片
+	 * @param multipartFileList
+	 * @param articleId
+	 * @return
+	 * @throws VerificationException
+	 */
+	@PostMapping("/upload-article-picture/{articleId}")
+	public ResultVO uploadArticlePicture(@RequestParam("file") List<MultipartFile> multipartFileList,
+										 @PathVariable("articleId") Integer articleId) throws VerificationException {
+		for (MultipartFile file : multipartFileList){
+			if (FileInfoType.IMAGE.verifySuffix(file.getOriginalFilename())){
+				throw new VerificationException("不支持的文件类型");
+			}
+		}
+		return ResultVOUtil.success(articleService.uploadArticlePicture(multipartFileList, articleId));
+	}
+
 }

@@ -1,10 +1,15 @@
 package xyz.yazhe.yazheweb.service.blog.service;
 
 import com.github.pagehelper.PageInfo;
+import org.springframework.web.multipart.MultipartFile;
+import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleCommentVo;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleVO;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
+
+import java.util.List;
 
 /**
  * 文章服务
@@ -57,4 +62,12 @@ public interface ArticleService {
 	 * @return
 	 */
 	PageInfo<ArticleCommentVo> getCommentByCondition(ArticleCommentRo articleCommentRo);
+
+	/**
+	 * 批量上传文章图片
+	 * @param multipartFileList
+	 * @param articleId
+	 * @return
+	 */
+	List<FileInfoVo> uploadArticlePicture(List<MultipartFile> multipartFileList, Integer articleId) throws VerificationException;
 }

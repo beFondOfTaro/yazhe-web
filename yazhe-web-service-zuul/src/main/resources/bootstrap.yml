@@ -22,4 +22,4 @@ eureka:
 
 jasypt:
   encryptor:
-    password:
+    password: "!A61RSTby"

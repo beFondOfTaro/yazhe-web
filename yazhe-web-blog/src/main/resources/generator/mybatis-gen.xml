@@ -16,8 +16,8 @@
 
 		<!--数据库连接 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-						connectionURL="jdbc:mysql://39.108.97.103:3306/yazhe_web" userId="root"
-						password="123456">
+						connectionURL="jdbc:mysql://114.116.97.243:3306/yazhe_web" userId="root"
+						password="A61RSTby">
 		</jdbcConnection>
 		<!--默认false Java type resolver will always use java.math.BigDecimal if
 			the database column is of type DECIMAL or NUMERIC. -->
@@ -44,9 +44,11 @@
 		</javaClientGenerator>
 
 		<!--对应数据库表 mysql可以加入主键自增 字段命名 忽略某字段等 -->
-		<table tableName="t_article" domainObjectName="Article"
+		<table tableName="t_article_file_info" domainObjectName="ArticleFileInfo"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
-			   selectByExampleQueryId="false" />
+			   selectByExampleQueryId="false" >
+			<generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+		</table>
 	</context>
 </generatorConfiguration>

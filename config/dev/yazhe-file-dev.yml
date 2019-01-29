@@ -1,0 +1,2 @@
+#文件上传路径前缀，结尾必须加/
+file-path-prefix: /usr/local/yazhe-web/file-repository/
