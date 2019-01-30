@@ -125,8 +125,10 @@ public class WebAuthFilter extends ZuulFilter{
 				//不存在[]，直接匹配url
 				if (sourceUrl.endsWith(PLACEHOLDER)) {
 					//匹配占位符之前的url是否相同
-					if (sourceUrl.substring(0, sourceUrl.lastIndexOf(PLACEHOLDER)).contains(
-							requestUrl.substring(0, requestUrl.lastIndexOf("/")))) {
+					if (requestUrl.contains(
+							sourceUrl.substring(0, sourceUrl.lastIndexOf(PLACEHOLDER))
+						)
+					) {
 						return true;
 					}
 				} else if (sourceUrl.contains(requestUrl)) {
