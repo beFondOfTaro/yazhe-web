@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.yazhe.yazheweb.service.blog.bean.entity.ArticleFileInfo;
 import xyz.yazhe.yazheweb.service.blog.dao.ArticleCommentMapper;
-import xyz.yazhe.yazheweb.service.blog.dao.ArticleFileInfoMapper;
 import xyz.yazhe.yazheweb.service.blog.dao.ArticleMapper;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
 import xyz.yazhe.yazheweb.service.blog.service.FileService;
@@ -34,8 +32,6 @@ public class ArticleServiceImpl implements ArticleService {
 	private ArticleMapper articleMapper;
 	@Autowired
 	private ArticleCommentMapper articleCommentMapper;
-	@Autowired
-	private ArticleFileInfoMapper articleFileInfoMapper;
 	@Autowired
 	private FileService fileService;
 
@@ -92,17 +88,9 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List<FileInfoVo> uploadArticlePicture(List<MultipartFile> multipartFileList, Integer articleId) throws VerificationException {
+	public List<FileInfoVo> uploadArticlePicture(List<MultipartFile> multipartFileList) throws VerificationException {
 		//保存文件
-		List<FileInfoVo> fileInfoVos = fileService.saveBatchFile(multipartFileList);
-		//写入文章-文件关联信息
-		fileInfoVos.parallelStream().forEach(fileInfoVo -> {
-			ArticleFileInfo articleFileInfo = new ArticleFileInfo();
-			articleFileInfo.setArticleId(articleId);
-			articleFileInfo.setFileInfoId(fileInfoVo.getId());
-			articleFileInfoMapper.insertSelective(articleFileInfo);
-		});
-		return fileInfoVos;
+		return fileService.saveBatchFile(multipartFileList);
 	}
 
 }

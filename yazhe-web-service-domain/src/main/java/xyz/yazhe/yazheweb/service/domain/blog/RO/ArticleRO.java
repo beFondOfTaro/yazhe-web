@@ -1,5 +1,6 @@
 package xyz.yazhe.yazheweb.service.domain.blog.RO;
 
+import lombok.Data;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
@@ -7,12 +8,14 @@ import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGrou
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 文章，request对象
  * @author Yazhe
  * Created at 15:25 2018/12/14
  */
+@Data
 public class ArticleRO {
 
 	@NotNull(message = "文章id不能为空",groups = {UpdateArticle.class})
@@ -33,45 +36,9 @@ public class ArticleRO {
 	@Valid
 	private QueryPage queryPage;
 
-	public Integer getId() {
-		return id;
-	}
+	/**
+	 * 上传的文件id
+	 */
+	private List<String> fileIds;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public QueryPage getQueryPage() {
-		return queryPage;
-	}
-
-	public void setQueryPage(QueryPage queryPage) {
-		this.queryPage = queryPage;
-	}
-
-	@Override
-	public String toString() {
-		return "ArticleRO{" +
-				"id=" + id +
-				", title='" + title + '\'' +
-				", content='" + content + '\'' +
-				", queryPage=" + queryPage +
-				'}';
-	}
 }

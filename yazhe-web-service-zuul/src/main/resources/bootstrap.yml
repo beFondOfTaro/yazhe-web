@@ -5,7 +5,7 @@ spring:
     config:
       label: master
       name: yazhe
-      profile: service-zuul-${spring.profiles.active},redis-${spring.profiles.active}
+      profile: service-zuul-${spring.profiles.active},redis-${spring.profiles.active},file-${spring.profiles.active}
       discovery:
               enabled: true
               service-id: service-config-server

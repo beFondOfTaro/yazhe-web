@@ -66,8 +66,7 @@ public interface ArticleService {
 	/**
 	 * 批量上传文章图片
 	 * @param multipartFileList
-	 * @param articleId
 	 * @return
 	 */
-	List<FileInfoVo> uploadArticlePicture(List<MultipartFile> multipartFileList, Integer articleId) throws VerificationException;
+	List<FileInfoVo> uploadArticlePicture(List<MultipartFile> multipartFileList) throws VerificationException;
 }

@@ -1,6 +1,7 @@
 package xyz.yazhe.yazheweb.service.domain.common.constants;
 
 import lombok.Getter;
+import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +44,26 @@ public enum FileInfoType {
 	}
 
 	/**
+	 * 根据后缀名获取文件类型
+	 * @param fileName
+	 * @return
+	 */
+	public static FileInfoType getInstanceBySuffix(String fileName) throws VerificationException {
+		int suffixIndex = fileName.lastIndexOf(".");
+		for (FileInfoType type : FileInfoType.values()){
+			for (String allowSuffix : type.getAllowSuffixList()){
+				if (suffixIndex == -1 && "".equals(allowSuffix)){
+					return type;
+				}
+				if (allowSuffix.equals(fileName.substring(suffixIndex + 1))){
+					return type;
+				}
+			}
+		}
+		throw new VerificationException("不支持该类型文件");
+	}
+
+	/**
 	 * 校验文件后缀名
 	 * @param fileName
 	 * @return
@@ -52,7 +73,7 @@ public enum FileInfoType {
 		if (suffixIndex == -1){
 			return false;
 		}
-		return FileInfoType.IMAGE.getAllowSuffixList().parallelStream()
-				.anyMatch(allowSuffix -> allowSuffix.equals(fileName.substring(suffixIndex)));
+		return getAllowSuffixList().stream()
+				.anyMatch(allowSuffix -> allowSuffix.equals(fileName.substring(suffixIndex + 1)));
 	}
 }

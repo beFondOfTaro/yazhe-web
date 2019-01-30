@@ -10,5 +10,5 @@ spring:
           uri: https://github.com/beFondOfTaro/yazhe-web
           search-paths: config/${spring.profiles.active}
           default-label: master
-          username:
-          password:
+          username: beFondOfTaro
+          password: lllyu66094936

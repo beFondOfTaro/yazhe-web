@@ -106,19 +106,17 @@ public class ArticleController {
 	/**
 	 * 上传文章图片
 	 * @param multipartFileList
-	 * @param articleId
 	 * @return
 	 * @throws VerificationException
 	 */
-	@PostMapping("/upload-article-picture/{articleId}")
-	public ResultVO uploadArticlePicture(@RequestParam("file") List<MultipartFile> multipartFileList,
-										 @PathVariable("articleId") Integer articleId) throws VerificationException {
+	@PostMapping("/upload-article-picture")
+	public ResultVO uploadArticlePicture(@RequestParam("file") List<MultipartFile> multipartFileList) throws VerificationException {
 		for (MultipartFile file : multipartFileList){
-			if (FileInfoType.IMAGE.verifySuffix(file.getOriginalFilename())){
+			if (!FileInfoType.IMAGE.verifySuffix(file.getOriginalFilename())){
 				throw new VerificationException("不支持的文件类型");
 			}
 		}
-		return ResultVOUtil.success(articleService.uploadArticlePicture(multipartFileList, articleId));
+		return ResultVOUtil.success(articleService.uploadArticlePicture(multipartFileList));
 	}
 
 }

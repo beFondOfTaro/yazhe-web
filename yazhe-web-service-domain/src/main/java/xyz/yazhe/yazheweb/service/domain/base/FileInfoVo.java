@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class FileInfoVo {
 
-	private Integer id;
+	private String id;
 
 	/**
 	 * 是否上传成功

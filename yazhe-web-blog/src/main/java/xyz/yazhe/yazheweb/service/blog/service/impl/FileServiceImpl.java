@@ -10,20 +10,19 @@ import xyz.yazhe.yazheweb.service.blog.repository.FileInfoRepository;
 import xyz.yazhe.yazheweb.service.blog.service.FileService;
 import xyz.yazhe.yazheweb.service.blog.bean.entity.FileInfo;
 import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
+import xyz.yazhe.yazheweb.service.domain.common.constants.FileInfoType;
 import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
+import xyz.yazhe.yazheweb.service.util.FileUtil;
 import xyz.yazhe.yazheweb.service.util.KeyUtil;
 import xyz.yazhe.yazheweb.service.util.web.RequestUtil;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Yazhe
@@ -35,7 +34,7 @@ public class FileServiceImpl implements FileService {
 
 	@Autowired
 	private FileInfoRepository fileInfoRepository;
-	@Value("${file-path-prefix}")
+	@Value("${file-upload.file-path-prefix}")
 	private String filePathPrefix;
 
 	@Transactional(rollbackFor = Exception.class)
@@ -55,16 +54,18 @@ public class FileServiceImpl implements FileService {
 		if (!fileDir.exists()){
 			fileDir.mkdirs();
 		}
-		multipartFileList.forEach(multipartFile -> {
+		for (MultipartFile multipartFile : multipartFileList){
 			FileInfo fileInfo = new FileInfo();
-			fileInfo.setName(multipartFile.getOriginalFilename());
+			fileInfo.setId(KeyUtil.genUniqueKey());
+			String fileName = multipartFile.getOriginalFilename();
+			fileInfo.setName(fileName);
 			fileInfo.setSize(multipartFile.getSize());
-			fileInfo.setType(fileInfo.getType());
+			fileInfo.setType(FileInfoType.getInstanceBySuffix(fileName).getCode());
 			fileInfo.setCreateUserId(currentUserId);
 			fileInfo.setUpdateUserId(currentUserId);
 
-			//上传路径
-			String fileUrl = fileDirPath + "/" + KeyUtil.genUniqueKey();
+			//上传路径，将文件id写入进去，可通过url获取文件id
+			String fileUrl = fileDirPath + "/" + fileInfo.getId() + "." + FileUtil.getSuffix(fileName);
 			fileInfo.setUrl(fileUrl);
 			//如果文件已经存在，则直接失败
 			FileInfoVo fileInfoVo = new FileInfoVo();
@@ -72,32 +73,29 @@ public class FileServiceImpl implements FileService {
 			File file = new File(fileUrl);
 			if (file.exists()){
 				fileInfoVo.setSuccessful(Boolean.FALSE);
-				return;
+				break;
 			}
 			//开始上传
 			try {
 				multipartFile.transferTo(new File(fileUrl));
 				fileInfoList.add(fileInfo);
 				// 添加返回信息
+				fileInfoVo.setId(fileInfo.getId());
 				fileInfoVo.setUrl(getRelativeFileUrl(fileUrl));
+				fileInfoVo.setSuccessful(Boolean.TRUE);
 				fileInfoVos.add(fileInfoVo);
 			} catch (IOException e) {
 				log.error("文件: " + fileInfo.getName() + ",上传失败", e);
 			}
-		});
+		}
+		if (fileInfoList.isEmpty()){
+			throw new BusinessException("文件上传失败");
+		}
 		if (fileInfoRepository.insertBatch(fileInfoList) != fileInfoList.size()){
 			//todo 进行文件回滚操作，删除已上传的
 
 			throw new BusinessException("文件上传失败");
 		}
-		//将id写入新加的文件信息
-		//先根据url查询文件列表
-		List<String> urls = fileInfoVos.parallelStream().map(fileInfoVo -> getFileAbsoluteUrl(fileInfoVo.getUrl())).collect(Collectors.toList());
-		//转换成url为key的map
-		Map<String, FileInfo> fileInfoMap = fileInfoRepository.queryFileInUrls(urls)
-				.parallelStream().collect(Collectors.toMap(fileInfo -> getRelativeFileUrl(fileInfo.getUrl()), fileInfo -> fileInfo));
-		//写入id
-		fileInfoVos.forEach(fileInfoVo -> fileInfoVo.setId(fileInfoMap.get(fileInfoVo.getUrl()).getId()));
 		return fileInfoVos;
 	}
 
@@ -109,10 +107,6 @@ public class FileServiceImpl implements FileService {
 			}
 		});
 		fileInfoRepository.deleteBatchInFileIds(fileIds);
-	}
-
-	@Override
-	public void downloadFile(HttpServletResponse response, String relativeFileUrl) {
 	}
 
 	/**
