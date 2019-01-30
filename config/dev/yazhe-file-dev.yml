@@ -1,6 +1,6 @@
 #文件上传路径前缀，结尾必须加/
 file-upload:
-  file-path-prefix: /usr/local/yazhe-web/file-repository/${spring.application.name}/
+  file-path-prefix: E:/usr/local/yazhe-web/file-repository/${spring.application.name}/
 spring:
   mvc:
     # 静态文件请求匹配方式
