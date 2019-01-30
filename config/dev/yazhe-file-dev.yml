@@ -1,2 +1,10 @@
 #文件上传路径前缀，结尾必须加/
-file-path-prefix: /usr/local/yazhe-web/file-repository/
+file-upload:
+  file-path-prefix: /usr/local/yazhe-web/file-repository/${spring.application.name}/
+spring:
+  mvc:
+    # 静态文件请求匹配方式
+    static-path-pattern: /**
+  resources:
+    # 修改默认的静态寻址资源目录 多个使用逗号分隔
+    static-locations: classpath:/webjar,file:${file-path-prefix}
