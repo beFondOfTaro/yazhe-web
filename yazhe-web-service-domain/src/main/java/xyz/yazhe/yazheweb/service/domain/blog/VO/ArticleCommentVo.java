@@ -4,6 +4,7 @@ import lombok.Data;
 import xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Yazhe
@@ -16,7 +17,10 @@ public class ArticleCommentVo {
 
 	private Integer articleId;
 
-	private UserVO toUser;
+	/**
+	 * 子评论
+	 */
+	private List<ArticleCommentVo> childrenComments;
 
 	private String content;
 

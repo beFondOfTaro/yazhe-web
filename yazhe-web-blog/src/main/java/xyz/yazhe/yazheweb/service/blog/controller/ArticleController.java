@@ -7,8 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
 import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.QueryArticleComment;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.UpdateArticle;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
@@ -101,6 +103,17 @@ public class ArticleController {
 	public ResultVO getCommentByCondition(ArticleCommentRo articleCommentRo) throws VerificationException {
 		articleCommentRo.getQueryPage().validParam();
 		return ResultVOUtil.success(articleService.getCommentByCondition(articleCommentRo));
+	}
+
+	/**
+	 * 添加评论
+	 * @param articleCommentRo
+	 * @return
+	 */
+	@PostMapping("/add-article-comment")
+	public ResultVO addArticleComment(@Validated(QueryArticleComment.class) ArticleCommentRo articleCommentRo){
+		articleService.addComment(articleCommentRo);
+		return ResultVOUtil.success();
 	}
 
 	/**

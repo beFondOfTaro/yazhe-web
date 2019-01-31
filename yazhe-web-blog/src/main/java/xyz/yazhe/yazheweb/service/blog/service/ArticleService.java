@@ -64,6 +64,12 @@ public interface ArticleService {
 	PageInfo<ArticleCommentVo> getCommentByCondition(ArticleCommentRo articleCommentRo);
 
 	/**
+	 * 添加评论
+	 * @param articleCommentRo
+	 */
+	void addComment(ArticleCommentRo articleCommentRo);
+
+	/**
 	 * 批量上传文章图片
 	 * @param multipartFileList
 	 * @return

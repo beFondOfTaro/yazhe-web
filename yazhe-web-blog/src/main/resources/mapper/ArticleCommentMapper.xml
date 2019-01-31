@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="article_id" property="articleId" jdbcType="INTEGER" />
-    <result column="to_user_id" property="toUserId" jdbcType="VARCHAR" />
+    <result column="to_comment_id" property="toCommentId" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="create_user_id" property="createUserId" jdbcType="VARCHAR" />
     <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR" />
@@ -17,17 +17,13 @@
 		<result column="article_id" property="articleId"/>
 		<result column="content" property="content"/>
 		<result column="create_time" property="createTime"/>
-		<collection property="toUser" ofType="xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO">
-			<id column="t_u_id" property="id"/>
-			<result column="t_u_username" property="username"/>
-		</collection>
 		<collection property="createUser" ofType="xyz.yazhe.yazheweb.service.domain.user.auth.VO.UserVO">
 			<id column="c_u_id" property="id"/>
 			<result column="c_u_username" property="username"/>
 		</collection>
 	</resultMap>
   <sql id="Base_Column_List" >
-    id, article_id, to_user_id, content, create_user_id, update_user_id, create_time, 
+    id, article_id, to_comment_id, content, create_user_id, update_user_id, create_time,
     update_time, deleted
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -37,29 +33,37 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 	<select id="queryCommentByCondition" parameterType="xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo" resultMap="ArticleCommentVo">
-		select t1.id, t1.article_id, t1.content, t1.create_time, c_u.id c_u_id, c_u.username c_u_username,
-			   t_u.id t_u_id, t_u.username t_u_username
+		select t1.id, t1.article_id, t1.content, t1.create_time, c_u.id c_u_id, c_u.username c_u_username
 		from t_article_comment t1
 		left join user c_u
 		on c_u.id = t1.create_user_id
-		left join user t_u
-		on t_u.id = t1.to_user_id
+        <where>
+          <if test="articleId != null">
+            t1.article_id = #{articleId}
+          </if>
+          <if test="toCommentId != null">
+		     and t1.to_comment_id = #{toCommentId}
+          </if>
+          <if test="createUserId != null">
+              and t1.create_user_id = #{createUserId}
+           </if>
+        </where>
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_article_comment
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment" >
-    insert into t_article_comment (id, article_id, to_user_id, 
+    insert into t_article_comment (id, article_id, to_comment_id,
       content, create_user_id, update_user_id, 
       create_time, update_time, deleted
       )
-    values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, #{toUserId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, #{toCommentId,jdbcType=INTEGER},
       #{content,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, #{updateUserId,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment" >
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment" >
     insert into t_article_comment
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -68,8 +72,8 @@
       <if test="articleId != null" >
         article_id,
       </if>
-      <if test="toUserId != null" >
-        to_user_id,
+      <if test="toCommentId != null" >
+        to_comment_id,
       </if>
       <if test="content != null" >
         content,
@@ -97,8 +101,8 @@
       <if test="articleId != null" >
         #{articleId,jdbcType=INTEGER},
       </if>
-      <if test="toUserId != null" >
-        #{toUserId,jdbcType=VARCHAR},
+      <if test="toCommentId != null" >
+        #{toCommentId,jdbcType=INTEGER},
       </if>
       <if test="content != null" >
         #{content,jdbcType=VARCHAR},
@@ -126,8 +130,8 @@
       <if test="articleId != null" >
         article_id = #{articleId,jdbcType=INTEGER},
       </if>
-      <if test="toUserId != null" >
-        to_user_id = #{toUserId,jdbcType=VARCHAR},
+      <if test="toCommentId != null" >
+        to_comment_id = #{toCommentId,jdbcType=INTEGER},
       </if>
       <if test="content != null" >
         content = #{content,jdbcType=VARCHAR},
@@ -153,7 +157,7 @@
   <update id="updateByPrimaryKey" parameterType="xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment" >
     update t_article_comment
     set article_id = #{articleId,jdbcType=INTEGER},
-      to_user_id = #{toUserId,jdbcType=VARCHAR},
+        to_comment_id = #{toCommentId,jdbcType=INTEGER},
       content = #{content,jdbcType=VARCHAR},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       update_user_id = #{updateUserId,jdbcType=VARCHAR},

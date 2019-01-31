@@ -12,6 +12,7 @@ import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
 import xyz.yazhe.yazheweb.service.blog.service.FileService;
 import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
 import xyz.yazhe.yazheweb.service.domain.blog.DO.Article;
+import xyz.yazhe.yazheweb.service.domain.blog.DO.ArticleComment;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
 import xyz.yazhe.yazheweb.service.domain.blog.VO.ArticleCommentVo;
@@ -84,7 +85,30 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public PageInfo<ArticleCommentVo> getCommentByCondition(ArticleCommentRo articleCommentRo) {
 		PageHelper.startPage(articleCommentRo.getQueryPage().toPageHelperParam());
-		return new PageInfo<>(articleCommentMapper.queryCommentByCondition(articleCommentRo));
+		List<ArticleCommentVo> articleCommentVos = articleCommentMapper.queryCommentByCondition(articleCommentRo);
+		//查询子评论
+		ArticleCommentRo queryChildrenCommentRo = new ArticleCommentRo();
+		articleCommentVos.forEach(articleCommentVo -> {
+			queryChildrenCommentRo.setToCommentId(articleCommentVo.getArticleId());
+			articleCommentVo.setChildrenComments(articleCommentMapper.queryCommentByCondition(queryChildrenCommentRo));
+		});
+		return new PageInfo<>(articleCommentVos);
+	}
+
+	@Override
+	public void addComment(ArticleCommentRo articleCommentRo) {
+		ArticleComment articleComment = new ArticleComment();
+
+		Integer toCommentId = articleCommentRo.getToCommentId();
+		//如果是回复别人的评论，文章id直接从被评论的评论获取
+		if (toCommentId != null){
+			articleComment.setArticleId(articleCommentMapper.selectByPrimaryKey(toCommentId).getArticleId());
+		}else {
+			articleComment.setArticleId(articleCommentRo.getArticleId());
+		}
+		articleComment.setToCommentId(articleCommentRo.getToCommentId());
+		articleComment.setContent(articleCommentRo.getContent());
+		articleCommentMapper.insertSelective(articleComment);
 	}
 
 	@Override

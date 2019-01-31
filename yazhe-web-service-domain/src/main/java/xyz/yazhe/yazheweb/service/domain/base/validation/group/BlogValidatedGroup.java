@@ -13,4 +13,6 @@ public class BlogValidatedGroup {
 	}
 
 	public interface GetArticleList{}
+
+	public interface QueryArticleComment{}
 }
