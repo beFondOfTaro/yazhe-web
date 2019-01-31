@@ -8,6 +8,7 @@ import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * 分页查询的参数
@@ -77,7 +78,11 @@ public class QueryPage {
 		pageHelperParam.setPageNum(pageNum);
 		pageHelperParam.setPageSize(pageSize);
 		if (orderBy != null){
-			pageHelperParam.setOrderBy(orderBy + " " + orderDirection);
+			String orderByDirection = orderBy;
+			if (orderDirection != null){
+				orderByDirection = orderBy + " " + orderDirection;
+			}
+			pageHelperParam.setOrderBy(orderByDirection);
 		}
 		return pageHelperParam;
 	}
@@ -90,6 +95,21 @@ public class QueryPage {
 			throw new VerificationException("排序字段不合法");
 		}
 		return this;
+	}
+
+	/**
+	 * 校验参数，查询前必须校验
+	 */
+	public static void validParam(QueryPage queryPage) throws VerificationException {
+		if (queryPage == null){
+			throw new VerificationException("分页参数不能为空");
+		}
+		String orderDirection = queryPage.getOrderDirection();
+		boolean isOrderDirectionValid = orderDirection != null
+				&& ("asc".equals(orderDirection.toLowerCase()) || "desc".equals(orderDirection.toLowerCase()));
+		if (isOrderDirectionValid){
+			throw new VerificationException("排序字段不合法");
+		}
 	}
 
 	@Override

@@ -4,8 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticleComment;
 
 /**
  * @author Yazhe
@@ -19,17 +18,21 @@ public class ArticleCommentRo {
 	/**
 	 * 评论的正文
 	 */
-	@NotNull(message = "评论不能为空！", groups = {AddArticle.class})
+	@NotNull(message = "评论不能为空！", groups = {AddArticleComment.class})
 	private String content;
 
 	/**
 	 * 文章id
 	 */
-	@NotNull(message = "文章id不能为空！", groups = {AddArticle.class})
 	private Integer articleId;
 
 	/**
 	 * 被回复的评论id
 	 */
 	private Integer toCommentId;
+
+	/**
+	 * 创建评论的用户
+	 */
+	private String createUserId;
 }

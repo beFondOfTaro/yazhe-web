@@ -69,7 +69,12 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void logout() {
     	//清除token
-		redisTemplate.delete(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + RequestUtil.getCurrentUserId());
+		String userId = RequestUtil.getCurrentUserId();
+		if (userId == null){
+			throw new BusinessException("请先登录");
+		}
+		redisTemplate.delete(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId);
+		redisTemplate.delete(CommonConstants.RedisKey.USER_PERMISSION_PREFIX + userId);
 	}
 
 }

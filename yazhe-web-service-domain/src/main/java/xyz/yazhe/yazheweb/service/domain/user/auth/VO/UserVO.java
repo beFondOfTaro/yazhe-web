@@ -1,5 +1,7 @@
 package xyz.yazhe.yazheweb.service.domain.user.auth.VO;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Role;
@@ -13,6 +15,7 @@ import java.util.List;
  * Created at 23:04 2018/5/13
  */
 @Data
+@JsonInclude(Include.NON_NULL)
 public class UserVO {
 
     private String id;

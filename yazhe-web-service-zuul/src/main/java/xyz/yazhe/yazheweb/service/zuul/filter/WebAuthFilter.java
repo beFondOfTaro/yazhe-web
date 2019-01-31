@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import xyz.yazhe.yazheweb.service.domain.common.constants.CommonConstants;
 import xyz.yazhe.yazheweb.service.domain.common.constants.HttpParamKey;
 import xyz.yazhe.yazheweb.service.domain.common.constants.exception.ResultEnum;
+import xyz.yazhe.yazheweb.service.domain.exception.BusinessException;
 import xyz.yazhe.yazheweb.service.domain.exception.VerificationException;
 import xyz.yazhe.yazheweb.service.domain.user.auth.DO.Permission;
 import xyz.yazhe.yazheweb.service.util.GsonUtil;
@@ -77,25 +78,24 @@ public class WebAuthFilter extends ZuulFilter{
 		try {
 			//校验token
 			if (StringUtils.isEmpty(token)){
-				throw new VerificationException(ResultEnum.INVALID_TOKEN.getMessage());
+				logger.error("token不能为空！");
+				throw new BusinessException(ResultEnum.UNAUTHENTICATED);
 			}
 			userId = JWTUtil.getUserId(token);
 			if (userId == null || !token.equals(redisTemplate.boundValueOps(CommonConstants.RedisKey.AUTH_TOKEN_PREFIX + userId).get())){
 				//返回错误
-				throw new VerificationException(ResultEnum.TOKEN_EXPIRED.getMessage());
+				throw new BusinessException(ResultEnum.INVALID_TOKEN);
 			}
 		}
-		catch (VerificationException e){
+		catch (BusinessException e){
 			logger.error(e.getMessage());
-			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(),e.getMessage())));
-			requestContext.setResponseStatusCode(401);
+			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(e.getCode(),e.getMessage())));
 			requestContext.setSendZuulResponse(false);
 			return null;
 		}
 		//校验用户权限
 		if (!checkPermission(userId,requestUrl,requestMethod)){
 			requestContext.setResponseBody(gson.toJson(ResultVOUtil.error(ResultEnum.UNAUTHORIZED)));
-			requestContext.setResponseStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
 			requestContext.setSendZuulResponse(false);
 		}
 		return null;
@@ -177,7 +177,8 @@ public class WebAuthFilter extends ZuulFilter{
 			//缓存没有那么查询数据库
 			JsonArray permissionList = gson.toJsonTree(userFeign.listPermission().getData()).getAsJsonArray();
 			//缓存到redis
-			redisTemplate.boundValueOps(userTokenKey).set(permissionList.toString(),CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
+			redisTemplate.boundValueOps(userTokenKey)
+					.set(permissionList.toString(),CommonConstants.REDIS_KEY_DEFAULT_EXPIRE_TIME, TimeUnit.SECONDS);
 			for (JsonElement jsonElement : permissionList) {
 				if (matchUrl(requestUrl,requestMethod,jsonElement.getAsJsonObject().get("url").getAsString())) {
 					return true;

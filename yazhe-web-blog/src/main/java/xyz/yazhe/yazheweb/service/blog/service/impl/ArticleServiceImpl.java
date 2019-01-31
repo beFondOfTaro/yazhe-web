@@ -98,16 +98,22 @@ public class ArticleServiceImpl implements ArticleService {
 	@Override
 	public void addComment(ArticleCommentRo articleCommentRo) {
 		ArticleComment articleComment = new ArticleComment();
-
 		Integer toCommentId = articleCommentRo.getToCommentId();
 		//如果是回复别人的评论，文章id直接从被评论的评论获取
 		if (toCommentId != null){
 			articleComment.setArticleId(articleCommentMapper.selectByPrimaryKey(toCommentId).getArticleId());
-		}else {
-			articleComment.setArticleId(articleCommentRo.getArticleId());
+			articleComment.setToCommentId(articleCommentRo.getToCommentId());
 		}
-		articleComment.setToCommentId(articleCommentRo.getToCommentId());
+		Integer articleId = articleCommentRo.getArticleId();
+		//如果是回复文章
+		if (articleId != null){
+			articleComment.setArticleId(articleId);
+			articleComment.setToCommentId(null);
+		}
 		articleComment.setContent(articleCommentRo.getContent());
+		String currentUserId = RequestUtil.getCurrentUserId();
+		articleComment.setCreateUserId(currentUserId);
+		articleComment.setUpdateUserId(currentUserId);
 		articleCommentMapper.insertSelective(articleComment);
 	}
 

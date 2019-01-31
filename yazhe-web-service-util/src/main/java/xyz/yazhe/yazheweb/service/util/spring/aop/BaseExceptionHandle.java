@@ -1,6 +1,7 @@
 package xyz.yazhe.yazheweb.service.util.spring.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +27,7 @@ public class BaseExceptionHandle {
 	@ResponseBody
 	public ResultVO handleBusinessException(BusinessException e) {
 		log.error(e.getMessage(),e);
-		return ResultVOUtil.error(ResultEnum.BUSINESS_EXCEPTION.getCode(),e.getMessage());
+		return ResultVOUtil.error(e.getCode(),e.getMessage());
 	}
 
 	@ExceptionHandler(ResourceException.class)
@@ -38,10 +39,7 @@ public class BaseExceptionHandle {
 				"资源：" + e.getResource() + ";" + resourceExceptionEnum.getException());
 	}
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseBody
-	public ResultVO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-		BindingResult bindingResult = e.getBindingResult();
+	private String parseBindingResult(BindingResult bindingResult){
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("参数校验失败！");
 		bindingResult.getFieldErrors().forEach(fieldError -> {
@@ -51,8 +49,21 @@ public class BaseExceptionHandle {
 			stringBuilder.append(fieldError.getDefaultMessage());
 			stringBuilder.append("]");
 		});
+		return stringBuilder.toString();
+	}
+
+	@ExceptionHandler({MethodArgumentNotValidException.class})
+	@ResponseBody
+	public ResultVO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 		log.error(e.getMessage(), e);
-		return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(), stringBuilder.toString());
+		return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(), parseBindingResult(e.getBindingResult()));
+	}
+
+	@ExceptionHandler({BindException.class})
+	@ResponseBody
+	public ResultVO handleBindException(BindException e) {
+		log.error(e.getMessage(), e);
+		return ResultVOUtil.error(ResultEnum.PARAM_ERROR.getCode(), parseBindingResult(e.getBindingResult()));
 	}
 
 	@ExceptionHandler(VerificationException.class)

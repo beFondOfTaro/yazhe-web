@@ -5,12 +5,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.yazhe.yazheweb.service.blog.service.ArticleService;
-import xyz.yazhe.yazheweb.service.domain.base.FileInfoVo;
+import xyz.yazhe.yazheweb.service.domain.base.QueryPage;
 import xyz.yazhe.yazheweb.service.domain.base.ResultVO;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticle;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.GetArticleList;
-import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.QueryArticleComment;
+import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.AddArticleComment;
 import xyz.yazhe.yazheweb.service.domain.base.validation.group.BlogValidatedGroup.UpdateArticle;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleCommentRo;
 import xyz.yazhe.yazheweb.service.domain.blog.RO.ArticleRO;
@@ -100,18 +99,25 @@ public class ArticleController {
 	 * @return
 	 */
 	@PostMapping("/query-comment-by-condition")
-	public ResultVO getCommentByCondition(ArticleCommentRo articleCommentRo) throws VerificationException {
-		articleCommentRo.getQueryPage().validParam();
+	public ResultVO getCommentByCondition(@RequestBody ArticleCommentRo articleCommentRo) throws VerificationException {
+		QueryPage.validParam(articleCommentRo.getQueryPage());
 		return ResultVOUtil.success(articleService.getCommentByCondition(articleCommentRo));
 	}
 
 	/**
-	 * 添加评论
+	 * 添加评论，回复评论则需要评论id，回复文章需要文章id
 	 * @param articleCommentRo
 	 * @return
 	 */
 	@PostMapping("/add-article-comment")
-	public ResultVO addArticleComment(@Validated(QueryArticleComment.class) ArticleCommentRo articleCommentRo){
+	public ResultVO addArticleComment(@Validated(AddArticleComment.class)
+										  @RequestBody ArticleCommentRo articleCommentRo) throws VerificationException {
+		if (articleCommentRo.getArticleId()==null && articleCommentRo.getToCommentId()==null){
+			throw new VerificationException("文章id和被回复的评论id不能同时为空");
+		}
+		if (articleCommentRo.getArticleId()!=null && articleCommentRo.getToCommentId()!=null){
+			throw new VerificationException("文章id和被回复的评论id不能同时传递");
+		}
 		articleService.addComment(articleCommentRo);
 		return ResultVOUtil.success();
 	}

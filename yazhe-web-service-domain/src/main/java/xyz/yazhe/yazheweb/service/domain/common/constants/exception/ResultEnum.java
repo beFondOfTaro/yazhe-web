@@ -14,8 +14,8 @@ public enum ResultEnum {
     SUCCESS(0,"成功"),
     PARAM_ERROR(1, "参数不正确"),
     PASSWORD_INCORRECT(5, "用户名或密码不正确"),
-    INVALID_TOKEN(6, "无效的token"),
-    TOKEN_EXPIRED(7, "过期的token"),
+    INVALID_TOKEN(6, "登录已过期，请重新登录"),
+    UNAUTHENTICATED(7, "请先登录"),
     UNAUTHORIZED(8, "没有权限"),
 
     RESOURCE_NOT_FOUND(10, "资源不存在"),

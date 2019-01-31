@@ -40,6 +40,16 @@ public class LoginController {
         return ResultVOUtil.success(loginService.login(identifier, credential, identifyType));
     }
 
+	/**
+	 * 注销
+	 * @return
+	 */
+	@PostMapping("logout")
+	public ResultVO logout(){
+    	loginService.logout();
+    	return ResultVOUtil.success();
+	}
+
     @PostMapping("register-account")
     public ResultVO registerAccount(@Validated(RegisterAccount.class) @RequestBody UserRO userRO) throws SystemException {
     	//设置为普通用户
